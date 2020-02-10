@@ -1,0 +1,83 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="PassPhraseTextBox" parent="Theme.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">#ff0</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:includeFontPadding">true</item>
+
+    </style>
+
+    <style name="PassPhraseTextBox2" parent="Theme.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">#0ff</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">10dp</item>
+
+
+    </style>
+
+    <style name="HeadingTextView" parent="Theme.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">#fff</item>
+
+    </style>
+
+    <style name="SubHeadingTextView" parent="Theme.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">#ddd</item>
+
+    </style>
+
+    <style name="rubric" parent="Theme.AppCompat">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">5sp</item>
+
+        <item name="android:background">#ddd</item>
+
+    </style>
+
+    <style name="flashcard" parent="Theme.AppCompat">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">10sp</item>
+
+        <item name="android:background">#fed</item>
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

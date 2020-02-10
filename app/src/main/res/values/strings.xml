@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">KeyLocks</string>
+    <string name="choose_passphrase_label">Choose a memorable pass-phrase from the list</string>
+    <string name="choose_passphrase_hint">Tap your chosen passphrase. Move the slider for a new
+    selection of longer or shorter passphrases</string>
+    <string name="less_secure_label">Less secure, easier</string>
+    <string name="more_secure_lable">More secure, harder</string>
+    <string name="passphrase_error">There has been an error, OOPS!</string>
+    <string name="passphrase_learn0">Make sure you are in private for the this stage. Press "start" to continue
+    and "hide" if you are disturbed</string>
+    <string name="passphrase_learn1">Now you must commit your passphrase to memory. </string>
+    <string name="passphrase_learn2">Your passphrase is used to activate your private Key, which is kept securely on this
+        device</string>
+
+    <string name="passphrase_learn3">When you are happy that you can remember your passphrase, press "next"</string>
+    <string name="passphrase_test">Now see if you can remember your passphrase - enter it below.</string>
+    <string name="button_start">start</string>
+    <string name="button_hide">hide</string>
+    <string name="button_next">next</string>
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_create_key">CreateKey</string>
+
+    <string name="import_key">Import an existing PGP Private Key</string>
+    <string name="create_key">Create a new PGP key pair</string>
+    <string name="key_import_success_alert_title">Success!</string>
+    <string name="key_import_success_alert_body">Successfully read key file for PGP Private Key with ID:</string>
+    <string name="key_import_failure_alert_title">Import failed</string>
+    <string name="key_import_failure_alert_body">Is the file you chose an Ascii-armored text file containing a supported PGP Private Key?</string>
+</resources>

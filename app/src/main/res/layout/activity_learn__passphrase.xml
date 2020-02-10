@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="uk.co.platosys.keylocks.activities.LearnPassphrase">
+    <TextView
+        android:id="@+id/rubric"
+        style="@style/rubric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/passphrase_learn0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/flashchards" />
+
+    <TextView
+        android:id="@+id/flashchards"
+        style="@style/flashcard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/hidebutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rubric" >
+
+    </TextView>
+
+    <Button
+        android:id="@+id/hidebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/nextbutton"
+        app:layout_constraintTop_toBottomOf="@id/flashchards" />
+    <Button
+        android:id="@+id/nextbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_next"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/hidebutton"
+        app:layout_constraintTop_toBottomOf="@id/flashchards" />
+
+
+</android.support.constraint.ConstraintLayout>
