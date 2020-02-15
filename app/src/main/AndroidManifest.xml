@@ -3,6 +3,8 @@
     package="uk.co.platosys.keylocks">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
 
     <application
         android:allowBackup="true"
@@ -12,22 +14,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".services.LockStoreService"
+            android:name=".services.LocksmithService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"/>
         <service
             android:name=".services.LockStoreIntentService"
             android:exported="false" />
-
+        <service
+            android:name=".services.LockStoreService"
+            android:exported="true" />
         <activity
             android:name=".activities.CreateKey"
             android:label="@string/title_activity_create_key"
             android:parentActivityName=".activities.TestPassphrase"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.co.platosys.keylocks.activities.TestPassphrase" />
         </activity>
+        <activity android:name=".activities.ChoosePassphrase"/>
+        <activity android:name=".activities.LearnPassphrase"/>
+        <activity android:name=".activities.TestPassphrase"/>
+        <activity android:name=".activities.ConfigureKeyActivity"/>
+
     </application>
 
 </manifest>

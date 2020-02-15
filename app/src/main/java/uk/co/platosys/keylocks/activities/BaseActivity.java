@@ -13,16 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import uk.co.platosys.keylocks.R;
 import uk.co.platosys.keylocks.services.LockStoreIntentService;
 import uk.co.platosys.keylocks.services.LocksmithService;
 
 
 /**
- * All passphrases activities extend this base class.
+ * All KeyLocks Activities extend this base class.
  *
  * Created by edward on 21/02/18.
  */
@@ -30,56 +27,52 @@ import uk.co.platosys.keylocks.services.LocksmithService;
 public abstract class BaseActivity extends AppCompatActivity {
     int screenWidth;
     int screenHeight;
+    boolean locksmithBinding=false;
+    boolean lockstoreBinding=false;
     boolean bound = false;
-    boolean binding = false;
-    LocksmithService locksmithService;
-    String className = getClass().getName();
-    List<OnLockSmithServiceBoundListener> onLockSmithServiceBoundListenerList = new ArrayList<>();
-    List<OnLockStoreServiceBoundListener> onLockStoreServiceBoundListenerList = new ArrayList<>();
+    LocksmithService.LocksmithBinder locksmithBinder;
+    IBinder lockstoreBinder;
 
+    String className = getClass().getName();
+
+    AlertDialog alertDialog;
+    Context context;
     private ServiceConnection lockStoreServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
             Log.d("BA", className + " is bound");
-            binding = true;
-            for (OnLockStoreServiceBoundListener onLockStoreServiceBoundListener : onLockStoreServiceBoundListenerList) {
-
-            }
+            lockstoreBinding = true;
+            lockstoreBinder=iBinder;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             Log.d("BA", className + " is unbound");
-            binding = false;
+            lockstoreBinding = false;
+            lockstoreBinder=null;
         }
     };
     private ServiceConnection lockSmithServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
-            Log.d("BA", className + " is bound");
-            binding = true;
-            for (OnLockSmithServiceBoundListener onLockSmithServiceBoundListener : onLockSmithServiceBoundListenerList) {
-
-            }
+            Log.e("BA", className + " is bound");
+            locksmithBinding = true;
+            locksmithBinder=(LocksmithService.LocksmithBinder) iBinder;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             Log.d("BA", className + " is unbound");
-            binding = false;
+            locksmithBinding = false;
+            locksmithBinder = null;
         }
     };
 
-    public interface OnLockStoreServiceBoundListener {
 
-    }
-
-    public interface OnLockSmithServiceBoundListener {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.context=getApplicationContext();
         super.onCreate(savedInstanceState);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -91,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!bound) {
+        if (!(bound)) {
             bind();
         }
 
@@ -99,6 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        if(alertDialog!=null){alertDialog.dismiss();}
         if (bound) {
             unbindService(lockSmithServiceConnection);
             unbindService(lockStoreServiceConnection);
@@ -106,6 +100,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         super.onStop();
 
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if(alertDialog!=null){alertDialog.dismiss();}
     }
 
     private void bind() {
@@ -127,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
@@ -140,7 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             alertDialogBuilder.setNegativeButton(R.string.cancel, onClickListener);
         }
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+       alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
@@ -149,7 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
@@ -158,7 +157,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
-        AlertDialog alertDialog = alertDialogBuilder.create();
+       alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
@@ -167,7 +166,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
@@ -180,20 +179,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void reportBinding() {
-        if (binding) {
+        if (bound) {
             Log.d("BA", this.getClass().getName() + " reporting bound");
         } else {
             Log.d("BA", this.getClass().getName() + " reporting not bound");
         }
     }
 
-    public void addOnLockSmithServiceBoundListener(OnLockSmithServiceBoundListener onServiceBoundListener) {
-        onLockSmithServiceBoundListenerList.add(onServiceBoundListener);
-        Log.d("BA", "OLSmSBL added, now " + onLockSmithServiceBoundListenerList.size() + " listeners");
-    }
 
-    public void addOnLockStoreServiceBoundListener(OnLockStoreServiceBoundListener onServiceBoundListener) {
-        onLockStoreServiceBoundListenerList.add(onServiceBoundListener);
-        Log.d("BA", "OLStSBL added, now " + onLockStoreServiceBoundListenerList.size() + " listeners");
-    }
 }

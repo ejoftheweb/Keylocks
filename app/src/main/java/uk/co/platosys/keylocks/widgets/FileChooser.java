@@ -1,5 +1,10 @@
 package uk.co.platosys.keylocks.widgets;
 
+/** Code is copyright Roger Keays. Licensed by him as "public domain" and used accordingly.
+ * See https://rogerkeays.com/simple-android-file-chooser
+ *
+ */
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Environment;

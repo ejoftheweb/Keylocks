@@ -20,11 +20,41 @@
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_create_key">CreateKey</string>
+    <string name="sign_in">Sign in with Google</string>
 
-    <string name="import_key">Import an existing PGP Private Key</string>
-    <string name="create_key">Create a new PGP key pair</string>
+
+
+    <string name="import_key">Create your KeyLock from an existing PGP Key pair</string>
+    <string name="create_key">Create your new KeyLock from scratch</string>
+
+    <string name="key_choice_create_alert_title">Create a new KeyLock?</string>
+    <string name="key_choice_create_alert_body">This will create a KeyLock by generating a new OpenPGP key pair on this device. It may take a minute or so.</string>
+    <string name="key_choice_import_alert_title">Import an existing PGP key?</string>
+    <string name="key_choice_import_alert_body">Please ensure that the PGP Private Key is already stored in a file on this device\'s filesystem and that you know its passphrase</string>
+    <string name="no_external_media_alert_title">No Media</string>
+    <string name="no_external_media_alert_body">Maybe you need to mount an SD card in your device?</string>
+
+
     <string name="key_import_success_alert_title">Success!</string>
     <string name="key_import_success_alert_body">Successfully read key file for PGP Private Key with ID:</string>
     <string name="key_import_failure_alert_title">Import failed</string>
     <string name="key_import_failure_alert_body">Is the file you chose an Ascii-armored text file containing a supported PGP Private Key?</string>
+
+
+    <!--setup rubrices -->
+    <string name="rubric_setup_intro_title">Thanks for installing KeyLocks</string>
+    <string name="rubric_setup_intro_body">KeyLocks are the tools you need to sign content digitally and to vouch
+    for other people. Before you can use KeyLocks, you need to create your own KeyLock, choose a passphrase for it and commit the passphrase to memory. This should take about five or ten undisturbed minutes. </string>
+    <string name="setup_button_go">OK, let\'s get started</string>
+    <string name="setup_button_later">later</string>
+    <string name="rubric_setup_anonym_title">Authentic or Anonymous?</string>
+    <string name="rubric_setup_anonym_body_long">You start by creating an anonymous KeyLock and then add identities - such as email and photo ID -
+    to it to improve the  credibility of content signed by it. Anonymous signatures confer no credibility.</string>
+
+
+    <!--Key configuration rubrics-->
+    <string name="configure_key_title">Configure your KeyLock</string>
+    <string name="rubric_configure_key_passphrase">Enter your passphrase again to apply it to your new KeyLock</string>
+    <string name="label_key_identities">This KeyLock is associated with the following identities:</string>
+
 </resources>

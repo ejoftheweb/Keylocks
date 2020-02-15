@@ -3,6 +3,7 @@ package uk.co.platosys.keylocks.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 
@@ -22,6 +23,7 @@ import static uk.co.platosys.keylocks.Constants.LOCKSTORE_FILE_NAME;
  * helper methods.
  */
 public class LockStoreIntentService extends IntentService {
+    private static final String TAG = "LStIS";
     private static final String ACTION_ADD_LOCK = "uk.co.platosys.keylocks.services.action.add_lock";
     private static final String ACTION_GET_LOCK = "uk.co.platosys.keylocks.services.action.get_lock";
 
@@ -29,14 +31,10 @@ public class LockStoreIntentService extends IntentService {
     private static final String EXTRA_FINGERPRINT = "uk.co.platosys.keylocks.services.extra.FINGERPRINT";
     private static final String EXTRA_LOCK = "uk.co.platosys.keylocks.services.extra.LOCK";
     LockStore lockstore;
+    Context context;
     public LockStoreIntentService() {
         super("LockStoreIntentService");
-        try {
-            File lockstoreFile = new File(getFilesDir(), LOCKSTORE_FILE_NAME);
-            this.lockstore = new MinigmaLockStore(lockstoreFile, true);
-        }catch(Exception x){
-            Exceptions.dump(x);
-        }
+
     }
 
 
@@ -45,6 +43,7 @@ public class LockStoreIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+            Log.e(TAG, action);
             switch(action){
                 case ACTION_GET_LOCK:
                     final byte[] fingerprintBytes= intent.getByteArrayExtra(EXTRA_FINGERPRINT);
@@ -55,6 +54,7 @@ public class LockStoreIntentService extends IntentService {
                     handleActionAddLock(lockBytes);
                     break;
                 default:
+                    Log.e(TAG, "Unsupported operation "+action);
                     throw new UnsupportedOperationException("unknown intent action");
             }
         }

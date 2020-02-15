@@ -43,7 +43,8 @@ int rubricCounter=0;
 
         nextIntent = new Intent(this, TestPassphrase.class);
         nextIntent.putExtra(Constants.PASSPHRASE_INTENT_KEY, passphrase);
-        nextIntent.putExtra(Constants.NAME_INTENT_KEY,intent.getStringExtra(Constants.NAME_INTENT_KEY));
+        nextIntent.putExtra(Constants.TEMP_PASSPHRASE_INTENT_KEY, intent.getCharArrayExtra(Constants.TEMP_PASSPHRASE_INTENT_KEY));
+        nextIntent.putExtra(Constants.USERID_INTENT_KEY,intent.getStringExtra(Constants.USERID_INTENT_KEY));
         //TODO nextIntent.putExtra(FPConstants.EMAIL_INTENT_KEY,intent.getStringExtra(FPConstants.EMAIL_INTENT_KEY));
 
         nextButton.setEnabled(false);

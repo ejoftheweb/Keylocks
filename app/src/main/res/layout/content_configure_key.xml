@@ -4,37 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.co.platosys.keylocks.activities.TestPassphrase">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.CreateKey"
+    tools:showIn="@layout/activity_configure_key">
     <TextView
-        android:id="@+id/nameView"
+        android:id="@+id/id_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/emailView"
+        app:layout_constraintBottom_toTopOf="@+id/identities_view_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />/>
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
-        android:id="@+id/emailView"
+        android:id="@+id/identities_view_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_key_identities"
+        app:layout_constraintBottom_toTopOf="@+id/identities_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/id_view" />
+    <TextView
+        android:id="@+id/identities_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/passPhraseLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameView" />
+        app:layout_constraintTop_toBottomOf="@id/identities_view_label" />
 
     <TextView
         style="@style/rubric"
-        android:id="@+id/passPhraseLabel"
+        android:id="@+id/rubric_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/passphrase_test"
-        app:layout_constraintTop_toBottomOf="@id/emailView"
-        app:layout_constraintBottom_toTopOf="@+id/passPhraseBox"
+        android:text="@string/rubric_configure_key_passphrase"
+        app:layout_constraintTop_toBottomOf="@id/identities_view"
+        app:layout_constraintBottom_toTopOf="@+id/passphrase_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <uk.co.platosys.keylocks.widgets.PassphraseBox
-        android:id="@+id/passPhraseBox"
+        android:id="@+id/passphrase_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textVisiblePassword"
@@ -43,7 +54,7 @@
         app:layout_constraintBottom_toTopOf="@+id/passPhrase2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passPhraseLabel" />
+        app:layout_constraintTop_toBottomOf="@id/rubric_box" />
     />
 
     <Button
@@ -55,5 +66,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passPhraseBox" />
+        app:layout_constraintTop_toBottomOf="@id/passphrase_box" />
 </androidx.constraintlayout.widget.ConstraintLayout>

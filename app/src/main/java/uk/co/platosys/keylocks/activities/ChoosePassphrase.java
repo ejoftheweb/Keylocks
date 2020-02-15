@@ -2,6 +2,7 @@ package uk.co.platosys.keylocks.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ import uk.co.platosys.minigma.PassPhraser;
 import uk.co.platosys.keylocks.Constants;
 
 /**
- * This Activity is part of the startup process and helps the user
+ * This Activity is part of the sign-up process and helps the user
  * choose a secure random-word passphrase. The next Activity is LearnPassphrase.
  *
  */
@@ -30,13 +31,14 @@ TextView passPhrase5View;
 TextView passPhrase6View;
 SeekBar seekBar;
 ArrayList<TextView> wordlist = new ArrayList<>();
-
 private Intent nextIntent;
+private String TAG = "CP";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_passphrase);
         initialiseViews();
+        Log.e(TAG,"choose passphrase started");
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                                @Override
                                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -71,6 +73,7 @@ private Intent nextIntent;
                 @Override
                 public void onClick(View view) {
                     TextView textView1 = (TextView)view;
+                    Log.e(TAG, "passphrase chosen");
                     char[] passphrase = textView1.getText().toString().toCharArray();
                     confirmPassPhrase(passphrase);
                 }
@@ -80,17 +83,22 @@ private Intent nextIntent;
 
         Intent intent = getIntent();
         nextIntent= new Intent(this, LearnPassphrase.class);
-       nextIntent.putExtra(Constants.NAME_INTENT_KEY,intent.getStringExtra(Constants.NAME_INTENT_KEY));
-       //TODO nextIntent.putExtra(FPConstants.EMAIL_INTENT_KEY,intent.getStringExtra(FPConstants.EMAIL_INTENT_KEY));
+        nextIntent.putExtra(Constants.TEMP_PASSPHRASE_INTENT_KEY, intent.getCharArrayExtra(Constants.TEMP_PASSPHRASE_INTENT_KEY));
+      // nextIntent.putExtra(Constants.NAME_INTENT_KEY,intent.getStringExtra(Constants.NAME_INTENT_KEY));
+       nextIntent.putExtra(Constants.USERID_INTENT_KEY,intent.getStringExtra(Constants.USERID_INTENT_KEY));
         updatePassPhrases(seekBar.getProgress());
     }
 
     private void updatePassPhrases(int length){
+        Log.e(TAG, "passphrases changed to length:"+length);
        for (TextView textView:wordlist){
            textView.setText(new String(PassPhraser.getPassPhrase(length)));
        }
     }
     private void confirmPassPhrase(char[] passPhrase){
+        Log.e(TAG, "confirming passphrase:"+passPhrase);
+        Log.e(TAG, nextIntent.getStringExtra(Constants.USERID_INTENT_KEY));
+        //Log.e(TAG, nextIntent.)
        nextIntent.putExtra(Constants.PASSPHRASE_INTENT_KEY,passPhrase);
        startActivity(nextIntent);
     }

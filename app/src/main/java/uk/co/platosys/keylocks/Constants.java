@@ -31,6 +31,7 @@ public class Constants {
 
     //Intent keys
     public static final String PASSPHRASE_INTENT_KEY ="passphrase";
+    public static final String TEMP_PASSPHRASE_INTENT_KEY="temppassphrase";
     public static final String NAME_INTENT_KEY="name";
     public static final String EMAIL_INTENT_KEY="email";
     public static final String USERID_INTENT_KEY="userid";
