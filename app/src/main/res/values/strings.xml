@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">KeyLocks</string>
-    <string name="choose_passphrase_label">Choose a memorable pass-phrase from the list</string>
-    <string name="choose_passphrase_hint">Tap your chosen passphrase. Move the slider for a new
-    selection of longer or shorter passphrases</string>
     <string name="less_secure_label">Less secure, easier</string>
     <string name="more_secure_lable">More secure, harder</string>
     <string name="passphrase_error">There has been an error, OOPS!</string>
@@ -23,7 +20,6 @@
     <string name="sign_in">Sign in with Google</string>
 
 
-
     <string name="import_key">Create your KeyLock from an existing PGP Key pair</string>
     <string name="create_key">Create your new KeyLock from scratch</string>
 
@@ -40,21 +36,44 @@
     <string name="key_import_failure_alert_title">Import failed</string>
     <string name="key_import_failure_alert_body">Is the file you chose an Ascii-armored text file containing a supported PGP Private Key?</string>
 
+    <string name="confirm_passphrase_alert_title">Choose this passphrase?</string>
+
 
     <!--setup rubrices -->
-    <string name="rubric_setup_intro_title">Thanks for installing KeyLocks</string>
-    <string name="rubric_setup_intro_body">KeyLocks are the tools you need to sign content digitally and to vouch
-    for other people. Before you can use KeyLocks, you need to create your own KeyLock, choose a passphrase for it and commit the passphrase to memory. This should take about five or ten undisturbed minutes. </string>
-    <string name="setup_button_go">OK, let\'s get started</string>
+    <string name="rubric_setup_intro_title">Setting Up  KeyLocks</string>
+    <string name="rubric_setup_intro_body">Before you can use KeyLocks, you need to set up your own KeyLock. This should take about five or ten undisturbed minutes. </string>
+    <string name="setup_button_go">go for it</string>
     <string name="setup_button_later">later</string>
-    <string name="rubric_setup_anonym_title">Authentic or Anonymous?</string>
-    <string name="rubric_setup_anonym_body_long">You start by creating an anonymous KeyLock and then add identities - such as email and photo ID -
-    to it to improve the  credibility of content signed by it. Anonymous signatures confer no credibility.</string>
+    <string name="rubric_setup_pgp_title">Creating or Importing your KeyLock</string>
+    <string name="rubric_setup_pgp_body">KeyLocks is based on OpenPGP. If you already have an OpenPGP key, you can
+    import it to KeyLocks; alternatively, KeyLocks will create one for you.</string>
+    <string name="rubric_choose_passphrase_title">Choose a passphrase:</string>
+    <string name="rubric_choose_passphrase_body_0">Pick a random-word passphrase from the generated list below. </string>
+    <string name="rubric_choose_passphrase_body_1">Move the slider for a new list of longer or shorter passphrases.</string>
+    <string name="rubric_choose_passphrase_body_2">No need to write it down: in the next step,  KeyLocks will help you to commit it to memory.</string>
 
 
     <!--Key configuration rubrics-->
     <string name="configure_key_title">Configure your KeyLock</string>
     <string name="rubric_configure_key_passphrase">Enter your passphrase again to apply it to your new KeyLock</string>
     <string name="label_key_identities">This KeyLock is associated with the following identities:</string>
+    <string name="title_activity_directory">DirectoryActivity</string>
+
+
+
+    <!--Directory nav labels for later on-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
 
 </resources>

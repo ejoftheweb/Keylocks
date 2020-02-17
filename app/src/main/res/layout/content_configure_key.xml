@@ -7,6 +7,14 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.CreateKey"
     tools:showIn="@layout/activity_configure_key">
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/signin_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+        />
     <TextView
         android:id="@+id/id_view"
         android:layout_width="match_parent"

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="slider_label_width">50dp</dimen>
-    <dimen name="slider_width">200dp</dimen>
+
 </resources>

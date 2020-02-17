@@ -2,22 +2,15 @@ package uk.co.platosys.keylocks.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
 
-
-import uk.co.platosys.effwords.EffwordLists;
 
 import uk.co.platosys.keylocks.R;
 import uk.co.platosys.keylocks.Constants;
@@ -44,7 +37,7 @@ public class TestPassphrase extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_passphrase);
+        setContentView(R.layout.fragment_test_passphrase);
         initialiseViews();
         this.intent = getIntent();
         this.passPhrase=intent.getCharArrayExtra(Constants.PASSPHRASE_INTENT_KEY);
@@ -59,7 +52,7 @@ public class TestPassphrase extends AppCompatActivity {
         });
     }
 
-    public void moveOn(){
+    public void moveOn(){}/*
        String stringPassphrase = passphraseBox.getText().toString();
        Log.e(TAG, stringPassphrase);
         stringPassphrase = stringPassphrase.trim();
@@ -78,7 +71,7 @@ public class TestPassphrase extends AppCompatActivity {
              goBackIntent.putExtra(Constants.USERID_INTENT_KEY, intent.getStringExtra(Constants.USERID_INTENT_KEY));
             startActivity(goBackIntent);
         }
-    }
+    }*/
 
 
 

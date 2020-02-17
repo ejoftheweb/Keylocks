@@ -51,27 +51,52 @@
     </style>
 
     <style name="rubric" parent="Theme.AppCompat">
-        <item name="android:textSize">25sp</item>
-        <item name="android:textColor">#000</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#111</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:padding">5sp</item>
+        <item name="android:paddingLeft">20sp</item>
+        <item name="android:paddingRight">20sp</item>
+        <item name="android:paddingTop">5sp</item>
+        <item name="android:paddingBottom">5sp</item>
 
-        <item name="android:background">#ddd</item>
+        <item name="android:background">#eee</item>
 
     </style>
 
+    <style name="preferred_button" parent="Theme.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">10sp</item>
+        <item name="android:background">#ffc</item>
+    </style>
+
+    <style name="alternative_button" parent="Theme.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#220</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">10sp</item>
+        <item name="android:background">#efefdd</item>
+    </style>
+    <style name="inactive_button" parent="Theme.AppCompat">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#777</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">10sp</item>
+        <item name="android:background">#ccc</item>
+    </style>
     <style name="flashcard" parent="Theme.AppCompat">
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">#000</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
         <item name="android:padding">10sp</item>
-
         <item name="android:background">#fed</item>
-
     </style>
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

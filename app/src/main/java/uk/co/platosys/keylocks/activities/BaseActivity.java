@@ -10,6 +10,8 @@ import android.os.Environment;
 import android.os.IBinder;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -24,7 +26,7 @@ import uk.co.platosys.keylocks.services.LocksmithService;
  * Created by edward on 21/02/18.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends FragmentActivity {
     int screenWidth;
     int screenHeight;
     boolean locksmithBinding=false;
@@ -142,7 +144,18 @@ public abstract class BaseActivity extends AppCompatActivity {
        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+    void showAlert(int title, String message, boolean cancelable, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
+        if (cancelable) {
+            alertDialogBuilder.setNegativeButton(R.string.cancel, onClickListener);
+        }
 
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
     void showAlert(String title, int message, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);

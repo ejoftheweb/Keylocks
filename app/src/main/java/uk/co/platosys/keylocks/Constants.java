@@ -27,7 +27,10 @@ public class Constants {
     public static final String PREFS_USERNAME_KEY="username";
 
     public static final int MIN_PASSPHRASE_LENGTH=1;//for production, increase to 4
-
+    public static final int DEFAULT_PASSPHRASE_LENGTH=7;
+    //preferences
+    public static final String PREFERENCES_FILE = "preferences";
+    public static final String DEFAULT_KEY_PREFERENCE = "default_key";
 
     //Intent keys
     public static final String PASSPHRASE_INTENT_KEY ="passphrase";
@@ -40,6 +43,7 @@ public class Constants {
     //timings in ms for the LearnPassprhase flashcards.
     public static final long FLASHWAIT = 800;
     public static final long FLASHPAUSE=  1200;
+    public static final long RUBRICS_PAUSE=1500;
 
 public static final String ASCII_ARMORED_EXTENSION="asc";
 
