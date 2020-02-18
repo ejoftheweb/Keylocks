@@ -9,14 +9,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 import uk.co.platosys.keylocks.R;
-import uk.co.platosys.keylocks.services.LockStoreIntentService;
+import uk.co.platosys.keylocks.services.LockstoreService;
 import uk.co.platosys.keylocks.services.LocksmithService;
 
 
@@ -32,45 +31,43 @@ public abstract class BaseActivity extends FragmentActivity {
     boolean locksmithBinding=false;
     boolean lockstoreBinding=false;
     boolean bound = false;
-    LocksmithService.LocksmithBinder locksmithBinder;
-    IBinder lockstoreBinder;
-
+    LocksmithService locksmithService;
+    LockstoreService lockstoreService;
     String className = getClass().getName();
-
     AlertDialog alertDialog;
     Context context;
+
     private ServiceConnection lockStoreServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
             Log.d("BA", className + " is bound");
             lockstoreBinding = true;
-            lockstoreBinder=iBinder;
+            lockstoreService=((LockstoreService.LockstoreBinder) iBinder).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             Log.d("BA", className + " is unbound");
             lockstoreBinding = false;
-            lockstoreBinder=null;
+            lockstoreService=null;
         }
     };
+
     private ServiceConnection lockSmithServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
             Log.e("BA", className + " is bound");
             locksmithBinding = true;
-            locksmithBinder=(LocksmithService.LocksmithBinder) iBinder;
+            locksmithService =((LocksmithService.LocksmithBinder) iBinder).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             Log.d("BA", className + " is unbound");
             locksmithBinding = false;
-            locksmithBinder = null;
+            locksmithService = null;
         }
     };
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +86,6 @@ public abstract class BaseActivity extends FragmentActivity {
         if (!(bound)) {
             bind();
         }
-
     }
 
     @Override
@@ -101,8 +97,8 @@ public abstract class BaseActivity extends FragmentActivity {
             bound = false;
         }
         super.onStop();
-
     }
+
     @Override
     protected void onPause(){
         super.onPause();
@@ -114,20 +110,18 @@ public abstract class BaseActivity extends FragmentActivity {
         lockSmithServiceIntent.putExtra("activity", this.getClass().getName());
         Log.i("BA", className + " about to bind to service");
         bindService(lockSmithServiceIntent, lockSmithServiceConnection, Context.BIND_AUTO_CREATE);
-        Intent lockStoreServiceIntent = new Intent(this, LockStoreIntentService.class);
+        Intent lockStoreServiceIntent = new Intent(this, LockstoreService.class);
         lockStoreServiceIntent.putExtra("activity", this.getClass().getName());
         Log.i("BA", className + " about to bind to service");
         bindService(lockStoreServiceIntent, lockStoreServiceConnection, Context.BIND_AUTO_CREATE);
         bound = true;
     }
 
-
     void showAlert(int title, int message, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
-
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -140,10 +134,10 @@ public abstract class BaseActivity extends FragmentActivity {
         if (cancelable) {
             alertDialogBuilder.setNegativeButton(R.string.cancel, onClickListener);
         }
-
-       alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
     void showAlert(int title, String message, boolean cancelable, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);
@@ -152,10 +146,10 @@ public abstract class BaseActivity extends FragmentActivity {
         if (cancelable) {
             alertDialogBuilder.setNegativeButton(R.string.cancel, onClickListener);
         }
-
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
     void showAlert(String title, int message, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);
@@ -170,7 +164,7 @@ public abstract class BaseActivity extends FragmentActivity {
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setPositiveButton(R.string.OK, onClickListener);
-       alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
@@ -198,6 +192,5 @@ public abstract class BaseActivity extends FragmentActivity {
             Log.d("BA", this.getClass().getName() + " reporting not bound");
         }
     }
-
 
 }

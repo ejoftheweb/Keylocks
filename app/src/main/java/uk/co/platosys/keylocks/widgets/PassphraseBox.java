@@ -21,6 +21,9 @@ public class PassphraseBox extends AppCompatMultiAutoCompleteTextView {
                 R.layout.support_simple_spinner_dropdown_item, EffwordLists.getLongWordList()
         ));
     }
+    public char[] getPassphrase(){
+        return getText().toString().toCharArray();
+    }
     /**
      *  inner class to define the SpaceTokeniser to use for the multi-complete text box.
      */

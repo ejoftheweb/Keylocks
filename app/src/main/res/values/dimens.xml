@@ -9,4 +9,8 @@
     <dimen name="rubric_margin">20dp</dimen>
     <dimen name="slider_label_width">150dp</dimen>
     <dimen name="slider_width">150dp</dimen>
+    <dimen name="rubric_title_height">40dp</dimen>
+    <dimen name="rubric_caption_height">130dp</dimen>
+    <dimen name="rubric_illustration_height">70dp</dimen>
+    <dimen name="rubric_combined_height">200dp</dimen>
 </resources>

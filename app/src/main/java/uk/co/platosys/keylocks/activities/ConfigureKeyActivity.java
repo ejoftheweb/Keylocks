@@ -45,7 +45,6 @@ public class ConfigureKeyActivity extends BaseActivity implements LocksmithServi
                 wait(100);
             }catch(Exception x){}
         }
-        locksmithService = locksmithBinder.getService();
         locksmithService.addOnKeyCreatedListener(this);
 
 

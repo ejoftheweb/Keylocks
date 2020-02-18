@@ -8,6 +8,7 @@
     <string name="passphrase_learn1">Now you must commit your passphrase to memory. </string>
     <string name="passphrase_learn2">Your passphrase is used to activate your private Key, which is kept securely on this
         device</string>
+    <string name="rubric_learn_passphrase_title">Learn your passphrase</string>
 
     <string name="passphrase_learn3">When you are happy that you can remember your passphrase, press "next"</string>
     <string name="passphrase_test">Now see if you can remember your passphrase - enter it below.</string>
@@ -44,7 +45,7 @@
     <string name="rubric_setup_intro_body">Before you can use KeyLocks, you need to set up your own KeyLock. This should take about five or ten undisturbed minutes. </string>
     <string name="setup_button_go">go for it</string>
     <string name="setup_button_later">later</string>
-    <string name="rubric_setup_pgp_title">Creating or Importing your KeyLock</string>
+    <string name="rubric_setup_pgp_title">Creating your KeyLock</string>
     <string name="rubric_setup_pgp_body">KeyLocks is based on OpenPGP. If you already have an OpenPGP key, you can
     import it to KeyLocks; alternatively, KeyLocks will create one for you.</string>
     <string name="rubric_choose_passphrase_title">Choose a passphrase:</string>
@@ -52,6 +53,11 @@
     <string name="rubric_choose_passphrase_body_1">Move the slider for a new list of longer or shorter passphrases.</string>
     <string name="rubric_choose_passphrase_body_2">No need to write it down: in the next step,  KeyLocks will help you to commit it to memory.</string>
 
+    <string name="rubric_test_passphrase_title_0">Test your memory!</string>
+    <string name="rubric_test_passphrase_title_1">That\'s good. Try again!</string>
+    <string name="rubric_test_passphrase_title_2">One more time...</string>
+
+    <string name="button_relearn_label">Try Again</string>
 
     <!--Key configuration rubrics-->
     <string name="configure_key_title">Configure your KeyLock</string>
@@ -59,7 +65,8 @@
     <string name="label_key_identities">This KeyLock is associated with the following identities:</string>
     <string name="title_activity_directory">DirectoryActivity</string>
 
-
+<string name="keylock_not_ready_alert_title">Your KeyLock isn\'t ready yet!</string>
+    <string name="keylock_not_ready_alert_body">KeyLocks hasn\'t finished generating your new KeyLock. Keep on practising your new passphrase while you wait!</string>
 
     <!--Directory nav labels for later on-->
     <string name="navigation_drawer_open">Open navigation drawer</string>

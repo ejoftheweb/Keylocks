@@ -3,6 +3,7 @@ package uk.co.platosys.keylocks.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Binder;
 import android.util.Log;
 
 import java.io.File;
@@ -22,7 +23,7 @@ import static uk.co.platosys.keylocks.Constants.LOCKSTORE_FILE_NAME;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class LockStoreIntentService extends IntentService {
+public class LockstoreService extends IntentService {
     private static final String TAG = "LStIS";
     private static final String ACTION_ADD_LOCK = "uk.co.platosys.keylocks.services.action.add_lock";
     private static final String ACTION_GET_LOCK = "uk.co.platosys.keylocks.services.action.get_lock";
@@ -32,11 +33,15 @@ public class LockStoreIntentService extends IntentService {
     private static final String EXTRA_LOCK = "uk.co.platosys.keylocks.services.extra.LOCK";
     LockStore lockstore;
     Context context;
-    public LockStoreIntentService() {
-        super("LockStoreIntentService");
+    public LockstoreService() {
+        super("LockstoreService");
 
     }
-
+    public class LockstoreBinder extends Binder {
+        public LockstoreService getService(){
+            return LockstoreService.this;
+        }
+    }
 
 
     @Override

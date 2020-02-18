@@ -27,7 +27,8 @@ public class Constants {
     public static final String PREFS_USERNAME_KEY="username";
 
     public static final int MIN_PASSPHRASE_LENGTH=1;//for production, increase to 4
-    public static final int DEFAULT_PASSPHRASE_LENGTH=7;
+    public static final int DEFAULT_PASSPHRASE_LENGTH=5;
+    public static final int PASSPHRASE_TRIES=3;
     //preferences
     public static final String PREFERENCES_FILE = "preferences";
     public static final String DEFAULT_KEY_PREFERENCE = "default_key";

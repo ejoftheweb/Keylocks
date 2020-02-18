@@ -3,6 +3,7 @@ package uk.co.platosys.keylocks.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,10 +15,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.keylocks.R;
+import uk.co.platosys.keylocks.widgets.KLButton;
+import uk.co.platosys.keylocks.widgets.PassphraseBox;
 import uk.co.platosys.minigma.PassPhraser;
 
 public class SetupActivity extends BaseActivity {
@@ -37,15 +41,20 @@ public class SetupActivity extends BaseActivity {
     TextView passphrase4;
     TextView passphrase5;
     TextView flashcards;
-    Button leftButton;
-    Button rightButton;
+    KLButton leftButton;
+    KLButton rightButton;
+    TextView fullPassphrase;
+    PassphraseBox passphraseBox;
     ArrayList<TextView> passphraseList = new ArrayList<>();
+    int trycounter=0;
     private char[] passphrase;
     private boolean flashing=false;
     private List<String> rubrics=new ArrayList<>();
     private List<String> wordList=new ArrayList<>();
+    private List<String> rubricTitles=new ArrayList<>();
     int rubricCounter=0;
     private boolean rotating_rubrices=false;
+    private boolean keycreated=false;
 
     private String TAG="SetupActivity";
 
@@ -66,8 +75,10 @@ public class SetupActivity extends BaseActivity {
         this.passphrase4=(TextView) findViewById(R.id.passphrase_4);
         this.passphrase5=(TextView) findViewById(R.id.passphrase_5);
         this.flashcards=(TextView) findViewById(R.id.flashchards);
-        this.leftButton=(Button) findViewById(R.id.left_button);
-        this.rightButton=(Button) findViewById(R.id.right_button);
+        this.leftButton=(KLButton) findViewById(R.id.left_button);
+        this.rightButton=(KLButton) findViewById(R.id.right_button);
+        this.passphraseBox=(PassphraseBox) findViewById(R.id.passphrase_box);
+        this.fullPassphrase=(TextView) findViewById(R.id.full_passphrase);
     }
 
 
@@ -78,11 +89,13 @@ public class SetupActivity extends BaseActivity {
         initialiseViews();
         setInitialListeners();
         setOpeningVisibility();
+        fillLists();
     }
 
     //Add listeners:
     private void setInitialListeners() {
         this.rightButton.setText(R.string.setup_button_go);
+        this.rightButton.setPreferred(true);
         this.rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,16 +103,20 @@ public class SetupActivity extends BaseActivity {
             }
         });
         this.leftButton.setText(R.string.setup_button_later);
+        this.leftButton.setPreferred(false);
         this.leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //shutdown app
+                finish();
             }
         });
 
     }//
 
-    //Action methods
+    /**
+     * This method sets all Views not required for the first stage of setup to INVISIBLE. They are made
+     * VISIBLE as required as SetupActivity makes its way through the sequence of setup methods.
+     */
     private void setOpeningVisibility() {
         this.createKeylockButton.setVisibility(View.INVISIBLE);
         this.importKeylockButton.setVisibility(View.INVISIBLE);
@@ -116,8 +133,15 @@ public class SetupActivity extends BaseActivity {
         this.passphrase4.setVisibility(View.INVISIBLE);
         this.passphrase5.setVisibility(View.INVISIBLE);
         this.flashcards.setVisibility(View.INVISIBLE);
+        this.fullPassphrase.setVisibility(View.INVISIBLE);
+        this.passphraseBox.setVisibility(View.INVISIBLE);
 
         //later stage widgets too!
+    }
+    private void fillLists(){
+        rubricTitles.add(getString(R.string.rubric_test_passphrase_title_0));
+        rubricTitles.add(getString(R.string.rubric_test_passphrase_title_1));
+        rubricTitles.add(getString(R.string.rubric_test_passphrase_title_2));
     }
 
     private void startSetup() {
@@ -234,12 +258,7 @@ public class SetupActivity extends BaseActivity {
         });
     }
     private void learnPassphrase(){
-        showAlert("learn passphrase", new String(passphrase), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        this.rubricTitleView.setText(R.string.rubric_learn_passphrase_title);
         this.lessSecure.setVisibility(View.INVISIBLE);
         this.seekBar.setVisibility(View.INVISIBLE);
         this.moreSecure.setVisibility(View.INVISIBLE);
@@ -262,14 +281,17 @@ public class SetupActivity extends BaseActivity {
         rightButton.setEnabled(false);
 
         rightButton.setOnClickListener(nextListener);
-        rightButton.setOnClickListener(startListener);
+        rightButton.setText(R.string.button_next);
+        leftButton.setOnClickListener(startListener);
+        leftButton.setPreferred(true);
+        leftButton.setText(R.string.button_start);
     }
     private  View.OnClickListener startListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
             Log.i("LPP", "start button pressed");
-            Button button = (Button) view;
+            KLButton button = (KLButton) view;
             button.setText(R.string.button_hide);
             button.setOnClickListener(hideListener);
             startFlashShow();
@@ -278,7 +300,7 @@ public class SetupActivity extends BaseActivity {
     private  View.OnClickListener hideListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Button button = (Button) view;
+            KLButton button = (KLButton) view;
             button.setText(R.string.button_start);
             button.setOnClickListener(startListener);
             stopFlashShow();
@@ -306,6 +328,8 @@ public class SetupActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                fullPassphrase.setVisibility(View.INVISIBLE);
+                                flashcards.setVisibility(View.VISIBLE);
                                 flashcards.setText(word);
                             }
                         });
@@ -315,12 +339,15 @@ public class SetupActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            flashcards.setText(new String(passphrase));
+                            flashcards.setVisibility(View.INVISIBLE);
+                            fullPassphrase.setVisibility(View.VISIBLE);
+                            fullPassphrase.setText(new String(passphrase));
                             rubricCaptionView.setText(nextRubric());
                         }
                     });
                     Thread.sleep(Constants.FLASHPAUSE);
-
+                    rightButton.setPreferred(true);
+                    leftButton.setPreferred(false);
                 }
             }catch(Exception x){
                 Log.e("LPP", "error during flash show", x);
@@ -340,7 +367,7 @@ public class SetupActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            flashcards.setText(new String(passphrase));
+                            //flashcards.setText(new String(passphrase));
                             rubricCaptionView.setText(nextRubric());
                         }
                     });
@@ -361,12 +388,62 @@ public class SetupActivity extends BaseActivity {
             rubricCounter=0;
         }
         return rubric;
-
     }
+
     private void testPassphrase(){
 
+        this.rubricTitleView.setText(rubricTitles.get(trycounter));
+        this.rubricCaptionView.setVisibility(View.INVISIBLE);
+        this.flashcards.setVisibility(View.INVISIBLE);
+        this.fullPassphrase.setVisibility(View.INVISIBLE);
+        this.passphraseBox.setVisibility(View.VISIBLE);
+        this.passphraseBox.clearComposingText();
+        leftButton.setText(R.string.button_relearn_label);
+        leftButton.setPreferred(true);
+        rightButton.setEnabled(true);
+        rightButton.setText(R.string.OK);
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Arrays.equals(passphraseBox.getPassphrase(),passphrase)){
+                    passedTest();
+                }else{
+                    failedTest();
+                }
+            }
+        });
 
     }
+    public void passedTest(){
+
+        if(trycounter<Constants.PASSPHRASE_TRIES) {
+            trycounter++;
+            learnPassphrase();
+        }else if (keycreated) {
+            rightButton.setText(R.string.button_next);
+            rightButton.setPreferred(true);
+            final Intent intent = new Intent(this, ConfigureKeyActivity.class);
+            intent.putExtra(Constants.PASSPHRASE_INTENT_KEY, passphrase);
+            rightButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(intent);
+                }
+            });
+        }else {
+            showAlert(R.string.keylock_not_ready_alert_title, R.string.keylock_not_ready_alert_body, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    testPassphrase();
+                }
+            });
+        }
+    }
+    public void failedTest(){
+        trycounter=0;
+        learnPassphrase();
+    }
+
 }
 
 
