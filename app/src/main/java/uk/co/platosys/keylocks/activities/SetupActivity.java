@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +21,12 @@ import java.util.List;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.keylocks.R;
+import uk.co.platosys.keylocks.services.LocksmithService;
 import uk.co.platosys.keylocks.widgets.KLButton;
 import uk.co.platosys.keylocks.widgets.PassphraseBox;
 import uk.co.platosys.minigma.PassPhraser;
 
-public class SetupActivity extends BaseActivity {
+public class SetupActivity extends BaseActivity implements LocksmithService.OnKeyCreatedListener {
     TextView rubricTitleView;
     TextView rubricCaptionView;
     ImageView rubricIllustrationView;
@@ -55,6 +57,7 @@ public class SetupActivity extends BaseActivity {
     int rubricCounter=0;
     private boolean rotating_rubrices=false;
     private boolean keycreated=false;
+    long createdKeyID = 0;
 
     private String TAG="SetupActivity";
 
@@ -90,6 +93,21 @@ public class SetupActivity extends BaseActivity {
         setInitialListeners();
         setOpeningVisibility();
         fillLists();
+        doBinding();
+        LocksmithService.startCreateKeyPair(this, );
+    }
+    @Override
+    public void onKeyCreated(long keyID){
+        keycreated=true;
+        Toast.makeText(this, R.string.keylock_created_toast, Toast.LENGTH_SHORT);
+    }
+    private void doBinding(){
+        while (!bound){
+            try {
+                wait(50);
+            }catch(InterruptedException ie){}
+        locksmithService.addOnKeyCreatedListener(this);
+       }
     }
 
     //Add listeners:
@@ -348,6 +366,8 @@ public class SetupActivity extends BaseActivity {
                     Thread.sleep(Constants.FLASHPAUSE);
                     rightButton.setPreferred(true);
                     leftButton.setPreferred(false);
+                    flashcards.setVisibility(View.VISIBLE);
+                    fullPassphrase.setVisibility(View.INVISIBLE);
                 }
             }catch(Exception x){
                 Log.e("LPP", "error during flash show", x);

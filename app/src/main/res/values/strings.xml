@@ -67,6 +67,7 @@
 
 <string name="keylock_not_ready_alert_title">Your KeyLock isn\'t ready yet!</string>
     <string name="keylock_not_ready_alert_body">KeyLocks hasn\'t finished generating your new KeyLock. Keep on practising your new passphrase while you wait!</string>
+    <string name="keylock_created_toast">KeyLock Created!</string>
 
     <!--Directory nav labels for later on-->
     <string name="navigation_drawer_open">Open navigation drawer</string>

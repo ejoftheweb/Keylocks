@@ -1,13 +1,17 @@
 package uk.co.platosys.keylocks.activities;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
+import java.util.List;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.keylocks.R;
@@ -48,7 +52,19 @@ public class ConfigureKeyActivity extends BaseActivity implements LocksmithServi
         locksmithService.addOnKeyCreatedListener(this);
 
 
+        String[] projection = {
+            ContactsContract.Profile._ID,
+            ContactsContract.Profile.DISPLAY_NAME,
+
+        };
+
+
+
+        /*
+        Cursor profile = getContentResolver().query(ContactsContract.Data.CONTENT_URI);
+        List <ContactsContract.RawContacts> rawContacts = ContactProvider.get*/
     }
+
     public void onKeyCreated(long keyID){
         try {
             this.key = new Key(new File(new File(getFilesDir(), Constants.KEYS_DIRECTORY_NAME), pseudonym));

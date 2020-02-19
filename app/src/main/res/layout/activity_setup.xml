@@ -98,6 +98,7 @@
         app:layout_constraintBottom_toTopOf="@+id/passphrase_0"
         app:layout_constraintStart_toStartOf="@id/rubric_caption_view"
         app:layout_constraintRight_toLeftOf="@id/passphrase_length_seek_bar"
+        app:layout_constraintEnd_toStartOf="@+id/passphrase_length_seek_bar"
         style="@style/bar_end_labels"/>
 
     <SeekBar
@@ -130,6 +131,7 @@
         app:layout_constraintBottom_toTopOf="@+id/passphrase_0"
         app:layout_constraintLeft_toRightOf="@id/passphrase_length_seek_bar"
         app:layout_constraintStart_toEndOf="@id/passphrase_length_seek_bar"
+        app:layout_constraintEnd_toEndOf="parent"
         style="@style/bar_end_labels"/>
     <TextView
         android:id="@+id/passphrase_0"
