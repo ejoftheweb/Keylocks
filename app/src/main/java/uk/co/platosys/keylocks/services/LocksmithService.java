@@ -19,11 +19,12 @@ import uk.co.platosys.minigma.LockStore;
 import uk.co.platosys.minigma.Minigma;
 import uk.co.platosys.minigma.MinigmaLockStore;
 import uk.co.platosys.minigma.exceptions.Exceptions;
-import uk.co.platosys.minigma.utils.Kidney;
+
 
 import static uk.co.platosys.keylocks.Constants.LOCKSTORE_FILE_NAME;
 import static uk.co.platosys.keylocks.Constants.PASSPHRASE_INTENT_KEY;
-import static uk.co.platosys.keylocks.Constants.USERID_INTENT_KEY;
+import static uk.co.platosys.keylocks.Constants.TEMP_PASSPHRASE_INTENT_KEY;
+
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -35,7 +36,6 @@ import static uk.co.platosys.keylocks.Constants.USERID_INTENT_KEY;
 public class LocksmithService extends IntentService {
     private final IBinder iBinder = new LocksmithBinder();
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String CREATE_KEYPAIR = "uk.co.platosys.keylocks.action.createkeypair";
     //private static final String ACTION_BAZ = "uk.co.platosys.fingerprinter.action.BAZ";
     private static String TAG = "Locksmith Service";
       private LockStore lockstore;
@@ -59,12 +59,12 @@ public class LocksmithService extends IntentService {
      * @see IntentService
      */
 
-    public static void startCreateKeyPair(Context context, String userID, char[] passphrase) {
-        Log.e(TAG, "starting to create keypair for "+userID);
+    public static void startCreateKeyPair(Context context, char[] passphrase) {
+     //   Log.e(TAG, "starting to create keypair for "+userID);
         Log.e(TAG, "using Minigmand version "+ Minigma.VERSION);
         Intent intent = new Intent(context, LocksmithService.class);
-        intent.setAction(CREATE_KEYPAIR);
-        intent.putExtra(USERID_INTENT_KEY, userID);
+        intent.setAction(Constants.CREATE_KEYPAIR);
+        //intent.putExtra(USERID_INTENT_KEY, userID);
         intent.putExtra(PASSPHRASE_INTENT_KEY, passphrase);
         try {
             context.startService(intent);
@@ -92,23 +92,25 @@ public class LocksmithService extends IntentService {
                 Exceptions.dump(x);
             }
             final String action = intent.getAction();
-            if (action.equals(CREATE_KEYPAIR)) {
-                final String userID = intent.getStringExtra(USERID_INTENT_KEY);
-                final char[] passphrase = intent.getCharArrayExtra(PASSPHRASE_INTENT_KEY);
-                intent.removeExtra(PASSPHRASE_INTENT_KEY);
-                Log.e(TAG, "creating lockset for "+userID);
+            if (action.equals(Constants.CREATE_KEYPAIR)) {
+                //final String userID = intent.getStringExtra(USERID_INTENT_KEY);
+                final char[] passphrase = intent.getCharArrayExtra(TEMP_PASSPHRASE_INTENT_KEY);
+                intent.removeExtra(TEMP_PASSPHRASE_INTENT_KEY);
+                //Log.e(TAG, "creating lockset for "+userID);
                 try {
                     Log.e(TAG, "now creating the lockset");
 
-                    Lock lock = LockSmith.createLockset(keysDirectory, lockstore, userID, passphrase, Algorithms.RSA);
-                    Log.e(TAG, "lockset created with ID "+Kidney.toString(lock.getLockID()));
+                    Lock lock = LockSmith.createLockset(keysDirectory, lockstore, passphrase, Algorithms.RSA);
+                    Log.e(TAG, "lockset created with shortID "+lock.getShortID());
+
                     Log.d(TAG, keysDirectory.getPath());
-                    File keyfile = new File (keysDirectory, userID);
+                    File keyfile = new File (keysDirectory, lock.getShortID());
                     if(keyfile.exists()){
                         Log.e(TAG, "keyfile created with path "+keyfile.getPath());
                     }else{
                         Log.e(TAG, "keyfile not created?");
                     }
+                    Log.e(TAG, "there are "+keyCreatedListeners.size()+" okcListeners, about to notify them");
                     for(OnKeyCreatedListener onKeyCreatedListener:keyCreatedListeners){
                         onKeyCreatedListener.onKeyCreated(lock.getLockID());
                     }
@@ -122,7 +124,9 @@ public class LocksmithService extends IntentService {
         }
     }
     public void addOnKeyCreatedListener(OnKeyCreatedListener onKeyCreatedListener){
+        Log.e(TAG, "adding an okcListener");
         keyCreatedListeners.add(onKeyCreatedListener);
+        Log.e(TAG, "there are now "+keyCreatedListeners.size()+" okcListeners");
     }
 
     public interface OnKeyCreatedListener {

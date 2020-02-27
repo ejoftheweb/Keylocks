@@ -7,32 +7,32 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="uk.co.platosys.keylocks.activities.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:name="uk.co.platosys.keylocks.activities.ui.home.AddressBookFragment"
+        android:label="@string/menu_vouch"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
         android:name="uk.co.platosys.keylocks.activities.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:label="@string/menu_closest"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="uk.co.platosys.keylocks.activities.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:label="@string/menu_colleagues"
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
         android:id="@+id/nav_tools"
         android:name="uk.co.platosys.keylocks.activities.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
+        android:label="@string/menu_friends"
         tools:layout="@layout/fragment_tools" />
 
     <fragment
         android:id="@+id/nav_share"
         android:name="uk.co.platosys.keylocks.activities.ui.share.ShareFragment"
-        android:label="@string/menu_share"
+        android:label="@string/menu_family"
         tools:layout="@layout/fragment_share" />
 
     <fragment

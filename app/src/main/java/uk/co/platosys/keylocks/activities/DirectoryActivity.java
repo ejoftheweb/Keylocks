@@ -23,17 +23,26 @@ import android.view.Menu;
 
 import uk.co.platosys.keylocks.R;
 
+
+/**Directory Activity is the default Activity for the application. It is an address book.
+ *
+ *
+ */
 public class DirectoryActivity extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
-
+    private AppBarConfiguration appBarConfiguration;
+     private Toolbar toolbar;
+     private FloatingActionButton fab;
+     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directory);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        initialiseViews();
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,17 +50,17 @@ public class DirectoryActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
-                .setDrawerLayout(drawer)
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.locks_vouch, R.id.locks_closest, R.id.locks_colleagues,
+                R.id.locks_family, R.id.locks_friends, R.id.nav_send)
+                .setDrawerLayout(drawerLayout)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
@@ -65,7 +74,13 @@ public class DirectoryActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+    private void initialiseViews(){
+        toolbar = findViewById(R.id.toolbar);
+        fab = findViewById(R.id.fab);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
     }
 }

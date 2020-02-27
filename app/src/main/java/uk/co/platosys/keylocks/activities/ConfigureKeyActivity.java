@@ -1,7 +1,9 @@
 package uk.co.platosys.keylocks.activities;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import java.io.File;
 import java.util.List;
@@ -20,9 +23,10 @@ import uk.co.platosys.keylocks.widgets.PassphraseBox;
 import uk.co.platosys.minigma.Key;
 import uk.co.platosys.minigma.exceptions.MinigmaException;
 import uk.co.platosys.minigma.utils.Kidney;
+import uk.co.platosys.minigma.utils.MinigmaUtils;
 
 
-public class ConfigureKeyActivity extends BaseActivity implements LocksmithService.OnKeyCreatedListener {
+public class ConfigureKeyActivity extends BaseActivity {
     Intent intent;
     //Views
     TextView keyIDView;
@@ -30,8 +34,10 @@ public class ConfigureKeyActivity extends BaseActivity implements LocksmithServi
     TextView identitiesView;
     TextView rubricView;
     PassphraseBox passphraseBox;
+    char[] temppassphrase;
+    char[] passphrase;
+    long keyID;
     Toolbar toolbar;
-    String pseudonym;
     String TAG = "CKA";
     Key key;
     LocksmithService locksmithService;
@@ -40,39 +46,38 @@ public class ConfigureKeyActivity extends BaseActivity implements LocksmithServi
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.intent=getIntent();
-        setContentView(R.layout.content_configure_key);
+        setContentView(R.layout.activity_configure_key);
         initialiseViews();
-        this.pseudonym=intent.getStringExtra(Constants.USERID_INTENT_KEY);
-        identitiesView.setText(pseudonym);
-        while(!bound){
-            try {
-                wait(100);
-            }catch(Exception x){}
+        this.temppassphrase=intent.getCharArrayExtra(Constants.TEMP_PASSPHRASE_INTENT_KEY);
+        intent.removeExtra(Constants.TEMP_PASSPHRASE_INTENT_KEY);
+        this.passphrase=intent.getCharArrayExtra(Constants.PASSPHRASE_INTENT_KEY);
+        intent.removeExtra(Constants.PASSPHRASE_INTENT_KEY);
+        this.keyID = intent.getLongExtra(Constants.KEYID_INTENT_KEY,0);
+        keyIDView.setText(Kidney.toString(keyID));
+        toolbar.setTitle(Kidney.toString(keyID));
+        try {
+            File keyFolder = new File(getFilesDir(), Constants.KEYS_DIRECTORY_NAME);
+            key = new Key(new File(keyFolder, MinigmaUtils.encode(keyID)));
+            key.changePassphrase(temppassphrase,passphrase);
+
+        }catch(MinigmaException mx){
+            Log.e(TAG, "issue initialising key", mx);
         }
-        locksmithService.addOnKeyCreatedListener(this);
+        this.temppassphrase=null;
+        this.passphrase=null;
 
-
-        String[] projection = {
+        String[] projection = new String[] {
             ContactsContract.Profile._ID,
             ContactsContract.Profile.DISPLAY_NAME,
-
+                ContactsContract.Profile.LOOKUP_KEY
         };
-
-
-
-        /*
-        Cursor profile = getContentResolver().query(ContactsContract.Data.CONTENT_URI);
-        List <ContactsContract.RawContacts> rawContacts = ContactProvider.get*/
+        Cursor profileCursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, null,null,null);
+        profileCursor.moveToFirst();
+        String userDisplayName = profileCursor.getString(profileCursor.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME));
+        identitiesView.setText(userDisplayName);
     }
 
-    public void onKeyCreated(long keyID){
-        try {
-            this.key = new Key(new File(new File(getFilesDir(), Constants.KEYS_DIRECTORY_NAME), pseudonym));
-            keyIDView.setText(Kidney.toString(key.getKeyID()));
-        }catch(MinigmaException mx) {
-            Log.e(TAG, "problem initialising key", mx);
-        }
-    }
+
     private void initialiseViews(){
         this.toolbar=(Toolbar) findViewById(R.id.toolbar);
         this.identitiesViewLabel=(TextView) findViewById(R.id.identities_view_label);
@@ -81,4 +86,6 @@ public class ConfigureKeyActivity extends BaseActivity implements LocksmithServi
         this.rubricView=(TextView) findViewById(R.id.rubric_box);
         this.passphraseBox =(PassphraseBox) findViewById(R.id.passphrase_box);
     }
+    protected void onLockStoreBound(){}
+    protected void onLockSmithBound(){}
 }

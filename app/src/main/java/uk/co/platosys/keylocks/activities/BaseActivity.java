@@ -1,14 +1,17 @@
 package uk.co.platosys.keylocks.activities;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.util.DisplayMetrics;
@@ -43,6 +46,7 @@ public abstract class BaseActivity extends FragmentActivity {
             Log.d("BA", className + " is bound");
             lockstoreBinding = true;
             lockstoreService=((LockstoreService.LockstoreBinder) iBinder).getService();
+            onLockStoreBound();
         }
 
         @Override
@@ -59,6 +63,7 @@ public abstract class BaseActivity extends FragmentActivity {
             Log.e("BA", className + " is bound");
             locksmithBinding = true;
             locksmithService =((LocksmithService.LocksmithBinder) iBinder).getService();
+            onLockSmithBound();
         }
 
         @Override
@@ -77,6 +82,10 @@ public abstract class BaseActivity extends FragmentActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+
+        }
         bind();
     }
 
@@ -192,5 +201,6 @@ public abstract class BaseActivity extends FragmentActivity {
             Log.d("BA", this.getClass().getName() + " reporting not bound");
         }
     }
-
+    protected abstract void onLockSmithBound();
+    protected abstract void onLockStoreBound();
 }

@@ -27,7 +27,7 @@
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="@dimen/rubric_illustration_height"
-        android:src="@mipmap/keylocks_image_foreground"
+        android:src="@mipmap/ic_lock_green_foreground"
         tools:layout_editor_absoluteX="2dp"
         tools:layout_editor_absoluteY="40dp" />
 

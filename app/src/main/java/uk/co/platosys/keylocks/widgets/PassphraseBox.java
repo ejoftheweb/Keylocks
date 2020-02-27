@@ -5,6 +5,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
 
@@ -14,6 +15,10 @@ import uk.co.platosys.effwords.EffwordLists;
 import uk.co.platosys.keylocks.R;
 
 public class PassphraseBox extends AppCompatMultiAutoCompleteTextView {
+    private char[] passphrase;
+    private CharSequence blank = new String("");
+    boolean set = false;
+    private String TAG = "PPBox";
     public PassphraseBox(Context context, AttributeSet attributeSet){
         super(context,attributeSet);
         setTokenizer(new SpaceTokenizer());
@@ -22,7 +27,32 @@ public class PassphraseBox extends AppCompatMultiAutoCompleteTextView {
         ));
     }
     public char[] getPassphrase(){
-        return getText().toString().toCharArray();
+        if(set) {
+            return passphrase;
+
+        }else{
+            set();
+            return passphrase;
+        }
+    }
+
+    /** Clears the display but sets the passphrase variable which can
+     * still be reached using the getPassphrase() method.
+     *
+     */
+    public void set(){
+        String text = getText().toString().trim();
+        this.passphrase= text.toCharArray();
+        setText(blank);
+        set=true;
+    }
+    public void clear(){
+        setText(blank);
+        this.passphrase=getText().toString().toCharArray();
+        set=false;
+    }
+    public void setExpectsInput(boolean expectsInput){
+
     }
     /**
      *  inner class to define the SpaceTokeniser to use for the multi-complete text box.
@@ -55,10 +85,10 @@ public class PassphraseBox extends AppCompatMultiAutoCompleteTextView {
                 return text;
             } else {
                 if (text instanceof Spanned) {
-                    SpannableString sp = new SpannableString(text + " ");
+                    SpannableString spannableString = new SpannableString(text + " ");
                     TextUtils.copySpansFrom((Spanned) text, 0, text.length(),
-                            Object.class, sp, 0);
-                    return sp;
+                            Object.class, spannableString, 0);
+                    return spannableString;
                 } else {
                     return text + " ";
                 }

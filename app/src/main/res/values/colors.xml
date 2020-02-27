@@ -6,4 +6,8 @@
     <color name="klbutton_preferred">#ffffcc</color>
     <color name="klbutton_enabled">#efefe0</color>
     <color name="klbutton_disabled">#cccccc</color>
+    <color name="text_trusted">#000</color>
+    <color name="text_more_trusted">#999</color>
+    <color name="text_less_trusted">#ccc</color>
+    <color name="text_untrusted">#eee</color>
 </resources>

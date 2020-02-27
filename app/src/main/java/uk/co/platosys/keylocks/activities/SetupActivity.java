@@ -2,6 +2,7 @@ package uk.co.platosys.keylocks.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +26,12 @@ import uk.co.platosys.keylocks.R;
 import uk.co.platosys.keylocks.services.LocksmithService;
 import uk.co.platosys.keylocks.widgets.KLButton;
 import uk.co.platosys.keylocks.widgets.PassphraseBox;
+import uk.co.platosys.minigma.Minigma;
 import uk.co.platosys.minigma.PassPhraser;
+import uk.co.platosys.minigma.utils.MinigmaUtils;
+
+import static uk.co.platosys.keylocks.Constants.PASSPHRASE_INTENT_KEY;
+import static uk.co.platosys.keylocks.Constants.TEMP_PASSPHRASE_INTENT_KEY;
 
 public class SetupActivity extends BaseActivity implements LocksmithService.OnKeyCreatedListener {
     TextView rubricTitleView;
@@ -33,7 +40,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     RadioButton createKeylockButton;
     RadioButton importKeylockButton;
     RadioGroup createOrImportRadioGroup;
-   TextView lessSecure;
+    TextView lessSecure;
     TextView moreSecure;
     SeekBar seekBar;
     TextView passphrase0;
@@ -58,8 +65,9 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     private boolean rotating_rubrices=false;
     private boolean keycreated=false;
     long createdKeyID = 0;
-
+    char[] temppassphrase;
     private String TAG="SetupActivity";
+
 
     private void initialiseViews() {
         this.rubricTitleView = (TextView) findViewById(R.id.rubric_title_view);
@@ -93,21 +101,16 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         setInitialListeners();
         setOpeningVisibility();
         fillLists();
-        doBinding();
-        LocksmithService.startCreateKeyPair(this, );
+
+        temppassphrase= MinigmaUtils.encode(new SecureRandom().nextLong()).toCharArray();
+
     }
     @Override
     public void onKeyCreated(long keyID){
+
         keycreated=true;
-        Toast.makeText(this, R.string.keylock_created_toast, Toast.LENGTH_SHORT);
-    }
-    private void doBinding(){
-        while (!bound){
-            try {
-                wait(50);
-            }catch(InterruptedException ie){}
-        locksmithService.addOnKeyCreatedListener(this);
-       }
+        createdKeyID=keyID;
+
     }
 
     //Add listeners:
@@ -153,6 +156,9 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         this.flashcards.setVisibility(View.INVISIBLE);
         this.fullPassphrase.setVisibility(View.INVISIBLE);
         this.passphraseBox.setVisibility(View.INVISIBLE);
+        this.createOrImportRadioGroup.setEnabled(false);
+        this.createKeylockButton.setEnabled(false);
+        this.importKeylockButton.setEnabled(false);
 
         //later stage widgets too!
     }
@@ -185,11 +191,25 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
             }
         });
     }
+    protected void onLockSmithBound(){
+        locksmithService.addOnKeyCreatedListener(this);
+        this.createOrImportRadioGroup.setEnabled(true);
+        this.createKeylockButton.setEnabled(true);
+        this.importKeylockButton.setEnabled(true);
+    }
+    protected void onLockStoreBound(){
 
+    }
     private void importKey() {
-        //TODO
+        showAlert(R.string.feature_not_implemented_alert_title, R.string.feature_not_implementedd_alerd_body, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
     }
     private void choosePassphrase(){
+        startCreateKeyPair(this, temppassphrase);
         this.createKeylockButton.setVisibility(View.INVISIBLE);
         this.importKeylockButton.setVisibility(View.INVISIBLE);
         this.lessSecure.setVisibility(View.VISIBLE);
@@ -256,7 +276,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         }
     }
     private void confirmPassPhrase(final char[] passPhrase){
-        Log.e(TAG, "confirming passphrase:"+passPhrase);
+        Log.e(TAG, "confirming passphrase:"+new String(passPhrase));
         this.passphrase = passPhrase;
         showAlert(R.string.confirm_passphrase_alert_title, new String(passPhrase), true, new DialogInterface.OnClickListener() {
             @Override
@@ -327,6 +347,8 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     private View.OnClickListener nextListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            stopFlashShow();
+
            testPassphrase();
         }
     };
@@ -364,10 +386,16 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
                         }
                     });
                     Thread.sleep(Constants.FLASHPAUSE);
-                    rightButton.setPreferred(true);
-                    leftButton.setPreferred(false);
-                    flashcards.setVisibility(View.VISIBLE);
-                    fullPassphrase.setVisibility(View.INVISIBLE);
+                    runOnUiThread(new Runnable(){
+                        @Override
+                        public void run(){
+                            rightButton.setPreferred(true);
+                            leftButton.setPreferred(false);
+                            flashcards.setVisibility(View.VISIBLE);
+                            fullPassphrase.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
                 }
             }catch(Exception x){
                 Log.e("LPP", "error during flash show", x);
@@ -417,7 +445,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         this.flashcards.setVisibility(View.INVISIBLE);
         this.fullPassphrase.setVisibility(View.INVISIBLE);
         this.passphraseBox.setVisibility(View.VISIBLE);
-        this.passphraseBox.clearComposingText();
+        this.passphraseBox.clear();
         leftButton.setText(R.string.button_relearn_label);
         leftButton.setPreferred(true);
         rightButton.setEnabled(true);
@@ -425,6 +453,8 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                passphraseBox.set();
+                char[] testPassphrase = passphraseBox.getPassphrase();
                 if(Arrays.equals(passphraseBox.getPassphrase(),passphrase)){
                     passedTest();
                 }else{
@@ -435,15 +465,16 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
 
     }
     public void passedTest(){
-
-        if(trycounter<Constants.PASSPHRASE_TRIES) {
+         if(trycounter<Constants.PASSPHRASE_TRIES) {
             trycounter++;
-            learnPassphrase();
+            testPassphrase();
         }else if (keycreated) {
             rightButton.setText(R.string.button_next);
             rightButton.setPreferred(true);
             final Intent intent = new Intent(this, ConfigureKeyActivity.class);
             intent.putExtra(Constants.PASSPHRASE_INTENT_KEY, passphrase);
+            intent.putExtra(TEMP_PASSPHRASE_INTENT_KEY, temppassphrase);
+            intent.putExtra(Constants.KEYID_INTENT_KEY, createdKeyID);
             rightButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -460,8 +491,22 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         }
     }
     public void failedTest(){
+        Log.e(TAG, "failed test" + new String(passphraseBox.getPassphrase())+" <> "+ new String(passphrase));
         trycounter=0;
         learnPassphrase();
+    }
+    private void startCreateKeyPair(Context context, char[] temppassphrase) {
+
+       // Log.e(TAG, "using Minigmand version "+ Minigma.VERSION);
+        Intent intent = new Intent(context, LocksmithService.class);
+        intent.setAction(Constants.CREATE_KEYPAIR);
+
+        intent.putExtra(TEMP_PASSPHRASE_INTENT_KEY, temppassphrase);
+        try {
+            context.startService(intent);
+        }catch (Exception x){
+            Log.e(TAG, "context exception ", x);
+        }
     }
 
 }
