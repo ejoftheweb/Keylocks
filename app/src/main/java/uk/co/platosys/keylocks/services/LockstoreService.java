@@ -1,20 +1,13 @@
 package uk.co.platosys.keylocks.services;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Binder;
 import android.util.Log;
 
-import java.io.File;
-
-import uk.co.platosys.minigma.Fingerprint;
 import uk.co.platosys.minigma.Lock;
 import uk.co.platosys.minigma.LockStore;
-import uk.co.platosys.minigma.MinigmaLockStore;
-import uk.co.platosys.minigma.exceptions.Exceptions;
-
-import static uk.co.platosys.keylocks.Constants.LOCKSTORE_FILE_NAME;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -81,5 +74,9 @@ public class LockstoreService extends IntentService {
     private void handleActionAddLock(byte[] lockBytes) {
         // TODO: Handle action Baz
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+    public Lock getLock(long keyID){
+        return null;
+        //return lockstore.getLock(keyID);
     }
 }
