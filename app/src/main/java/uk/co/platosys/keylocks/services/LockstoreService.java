@@ -6,8 +6,15 @@ import android.content.Intent;
 import android.os.Binder;
 import android.util.Log;
 
+import java.io.File;
+
+import uk.co.platosys.keylocks.Constants;
+import uk.co.platosys.minigma.Fingerprint;
 import uk.co.platosys.minigma.Lock;
 import uk.co.platosys.minigma.LockStore;
+import uk.co.platosys.minigma.MinigmaLockStore;
+import uk.co.platosys.minigma.exceptions.LockNotFoundException;
+import uk.co.platosys.minigma.exceptions.MinigmaException;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -63,7 +70,11 @@ public class LockstoreService extends IntentService {
      * parameters.
      */
     private void handleActionGetLock(byte[] fingerprintBytes) {
-        // TODO: Handle action Foo
+        try {
+            Lock lock = lockstore.getLock(new Fingerprint(fingerprintBytes));
+        }catch(LockNotFoundException lnfe){
+
+        }
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -72,11 +83,28 @@ public class LockstoreService extends IntentService {
      * parameters.
      */
     private void handleActionAddLock(byte[] lockBytes) {
-        // TODO: Handle action Baz
+       //Lock lock = new Lock(lockBytes);
+       //lockstore.addLock(lock);
         throw new UnsupportedOperationException("Not yet implemented");
     }
-    public Lock getLock(long keyID){
-        return null;
-        //return lockstore.getLock(keyID);
+    public Lock getLock(Fingerprint fingerprint){
+        try {
+            return lockstore.getLock(fingerprint);
+        }catch (LockNotFoundException lnfe){
+            return null;
+        }
+    }
+    public void initialise(Context context){
+        this.context=context;
+        try {
+            /*note here we are using the MinigmaLockStore implementation, which uses OpenPGP-format PublicKeyRings,
+            saved as Ascii-Armored text files.  As and when a better Android lockstore implementation (using a Room db) is ready,
+            it should be used instead.
+
+             */
+            this.lockstore = new MinigmaLockStore(new File(getFilesDir(), Constants.LOCKSTORE_FILE_NAME), false);
+        }catch (MinigmaException mx){
+
+        }
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.minigma.Algorithms;
+import uk.co.platosys.minigma.Fingerprint;
 import uk.co.platosys.minigma.Lock;
 import uk.co.platosys.minigma.LockSmith;
 import uk.co.platosys.minigma.LockStore;
@@ -112,7 +113,7 @@ public class LocksmithService extends IntentService {
                     }
                     Log.e(TAG, "there are "+keyCreatedListeners.size()+" okcListeners, about to notify them");
                     for(OnKeyCreatedListener onKeyCreatedListener:keyCreatedListeners){
-                        onKeyCreatedListener.onKeyCreated(lock.getLockID());
+                        onKeyCreatedListener.onKeyCreated(lock.getFingerprint());
                     }
 
                 }catch (Exception x){
@@ -130,7 +131,7 @@ public class LocksmithService extends IntentService {
     }
 
     public interface OnKeyCreatedListener {
-        void onKeyCreated(long keyID);
+        void onKeyCreated(Fingerprint fingerprint);
     }
     @Override
     public IBinder onBind(Intent intent){

@@ -71,7 +71,10 @@
     <string name="keylock_not_ready_alert_title">Your KeyLock isn\'t ready yet!</string>
     <string name="keylock_not_ready_alert_body">KeyLocks hasn\'t finished generating your new KeyLock. Keep on practising your new passphrase while you wait!</string>
     <string name="keylock_created_toast">KeyLock Created!</string>
-
+    <string name="share_rubric">Your new KeyLock is kept in two parts, the Key and the Lock</string>
+    <string name="share_rubric_1">The Key is kept securely on this device, but the Lock should be widely shared. Anyone
+    can use it to lock stuff so it can only be unlocked with its matching Key, which can only be used with the passphrase you have just learned.</string>
+    <string name="share_rubric_2">KeyLocks can publish your Lock (including the identities attached to it) to public keyservers</string>
     <!--Directory nav labels for later on-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

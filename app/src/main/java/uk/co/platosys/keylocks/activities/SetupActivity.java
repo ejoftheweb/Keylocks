@@ -26,10 +26,12 @@ import uk.co.platosys.keylocks.R;
 import uk.co.platosys.keylocks.services.LocksmithService;
 import uk.co.platosys.keylocks.widgets.KLButton;
 import uk.co.platosys.keylocks.widgets.PassphraseBox;
+import uk.co.platosys.minigma.Fingerprint;
 import uk.co.platosys.minigma.Minigma;
 import uk.co.platosys.minigma.PassPhraser;
 import uk.co.platosys.minigma.utils.MinigmaUtils;
 
+import static uk.co.platosys.keylocks.Constants.ACTION_NEW_KEY;
 import static uk.co.platosys.keylocks.Constants.PASSPHRASE_INTENT_KEY;
 import static uk.co.platosys.keylocks.Constants.TEMP_PASSPHRASE_INTENT_KEY;
 
@@ -64,7 +66,8 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     int rubricCounter=0;
     private boolean rotating_rubrices=false;
     private boolean keycreated=false;
-    long createdKeyID = 0;
+    Fingerprint createdKeyFingerprint = null;
+
     char[] temppassphrase;
     private String TAG="SetupActivity";
 
@@ -106,11 +109,9 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
 
     }
     @Override
-    public void onKeyCreated(long keyID){
-
+    public void onKeyCreated(Fingerprint fingerprint){
         keycreated=true;
-        createdKeyID=keyID;
-
+        createdKeyFingerprint=fingerprint;
     }
 
     //Add listeners:
@@ -472,9 +473,10 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
             rightButton.setText(R.string.button_next);
             rightButton.setPreferred(true);
             final Intent intent = new Intent(this, ConfigureKeyActivity.class);
+            intent.setAction(ACTION_NEW_KEY);
             intent.putExtra(Constants.PASSPHRASE_INTENT_KEY, passphrase);
             intent.putExtra(TEMP_PASSPHRASE_INTENT_KEY, temppassphrase);
-            intent.putExtra(Constants.KEYID_INTENT_KEY, createdKeyID);
+            intent.putExtra(Constants.KEYID_INTENT_KEY, createdKeyFingerprint.getFingerprintbytes());
             rightButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

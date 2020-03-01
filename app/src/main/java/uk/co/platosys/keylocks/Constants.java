@@ -41,6 +41,12 @@ public class Constants {
     public static final String EMAIL_INTENT_KEY="email";
     public static final String USERID_INTENT_KEY="userid";
 
+    public static final String CONFIG_STATE="configd";
+    public static final int CONFIG_STATE_NONE=0;
+    public static final int CONFIG_STATE_KEYLOCK=1;
+    public static final int CONFIG_STATE_CONFIGURED=2;
+    public static final int DEFAULT_CONFIG_STATE=CONFIG_STATE_CONFIGURED;
+
     //timings in ms for the LearnPassprhase flashcards.
     public static final long FLASHWAIT = 800;
     public static final long FLASHPAUSE=  1200;
@@ -54,5 +60,7 @@ public static final String ASCII_ARMORED_EXTENSION="asc";
     static final float AD_POPUP_PROPORTIONS=0.95f;
    public static final int REQUEST_CAMERA_PERMISSION = 200;
     public static final String CREATE_KEYPAIR = "uk.co.platosys.keylocks.action.createkeypair";
+    public static final String ACTION_NEW_KEY="uk.co.platosys.keylocks.action.newkey";
+    public static final String ACTION_RESUME="uk.co.platosys.keylocks.action.resume";
 
 }

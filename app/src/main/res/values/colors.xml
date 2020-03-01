@@ -10,4 +10,8 @@
     <color name="text_more_trusted">#999</color>
     <color name="text_less_trusted">#ccc</color>
     <color name="text_untrusted">#eee</color>
+    <color name="checklist_item_unchecked_background">#bbb</color>
+    <color name="checklist_item_checked_background">#dd6</color>
+    <color name="checklist_item_unchecked_text">#333</color>
+    <color name="checklist_item_checked_text">#000</color>
 </resources>

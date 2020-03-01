@@ -5,6 +5,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,9 @@ import android.util.Log;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.keylocks.R;
+
+import static android.content.Context.MODE_PRIVATE;
+import static uk.co.platosys.keylocks.Constants.ACTION_RESUME;
 
 /**
  * Activity that justs directs to another depending on the state of the preferences file.
@@ -29,6 +34,9 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        for(Account account: AccountManager.get(this).getAccounts()) {
+                Log.e("TATAG",  account.name + " " + account.toString());
+        }
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS)!=PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, requiredPermissions, Constants.CONTACT_PERMISSIONS_REQUEST);
         }else{
@@ -57,14 +65,27 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     }
     private void proceed(){
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.PREFERENCES_FILE, MODE_PRIVATE);
-        if (sharedPreferences.contains(Constants.DEFAULT_KEY_PREFERENCE)){
-            Intent intent = new Intent(this, DirectoryActivity.class);
-            startActivity(intent);
-        }else {
-            //app isn't set up, go to setup activity.
-            Intent intent = new Intent(this, SetupActivity.class);
-            startActivity(intent);
+        if(!(sharedPreferences.contains(Constants.CONFIG_STATE))){
+            sharedPreferences.edit().putInt(Constants.CONFIG_STATE, Constants.CONFIG_STATE_NONE).commit();
         }
+
+            Intent intent;
+            switch (sharedPreferences.getInt(Constants.CONFIG_STATE, Constants.DEFAULT_CONFIG_STATE)){
+                case Constants.CONFIG_STATE_NONE:
+                    intent=new Intent(this, SetupActivity.class);
+                    break;
+                case Constants.CONFIG_STATE_KEYLOCK:
+                    intent=new Intent(this, ConfigureKeyActivity.class);
+                    intent.setAction(ACTION_RESUME);
+                    break;
+                case Constants.CONFIG_STATE_CONFIGURED:
+                default:
+                    intent = new Intent(this, DirectoryActivity.class);
+                    break;
+            }
+        intent.putExtra (sharedPreferences.getString(Constants.DEFAULT_KEY_PREFERENCE, null),"");
+         startActivity(intent);
+
     }
     public void halt(){
         Intent intent = new Intent(this, ClosedownActivity.class);
