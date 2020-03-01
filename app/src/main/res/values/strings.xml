@@ -63,9 +63,10 @@
     <string name="button_relearn_label">Try Again</string>
 
     <!--Key configuration rubrics-->
-    <string name="configure_key_title">Configure KeyLock with fingerprint:</string>
-    <string name="rubric_configure_key_passphrase">Enter your passphrase again to apply it to your new KeyLock</string>
-    <string name="label_key_identities">This KeyLock is associated with the following identities:</string>
+    <string name="configure_key_title">Configure KeyLock</string>
+    <string name="configure_key_subtitle_prefix">KeyLockID:</string>
+    <string name="rubric_configure_key_passphrase">Enter your passphrase to confirm the links:</string>
+    <string name="label_key_identities">Select the identities to link to this KeyLock:</string>
     <string name="title_activity_directory">DirectoryActivity</string>
 
     <string name="keylock_not_ready_alert_title">Your KeyLock isn\'t ready yet!</string>

@@ -14,10 +14,15 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.keylocks.R;
+import uk.co.platosys.keylocks.models.Identity;
+import uk.co.platosys.keylocks.models.IdentityModel;
 import uk.co.platosys.keylocks.services.LocksmithService;
+import uk.co.platosys.keylocks.utils.AccountUtils;
 import uk.co.platosys.keylocks.widgets.Checklist;
 import uk.co.platosys.keylocks.widgets.ChecklistItem;
 import uk.co.platosys.keylocks.widgets.PassphraseBox;
@@ -44,7 +49,7 @@ public class ConfigureKeyActivity extends BaseActivity {
     Lock lock;
     boolean lockStoreBound;
 
-
+    List<Identity> identities = new ArrayList<>();
     Toolbar toolbar;
     String TAG = "CKA";
     Key key;
@@ -56,8 +61,31 @@ public class ConfigureKeyActivity extends BaseActivity {
         loadKeyLock(getIntent());
         setContentView(R.layout.activity_configure_key);
         initialiseViews();
-        for (Account account : AccountManager.get(this).getAccounts()) {
-           ChecklistItem checklistItem = new ChecklistItem(this, account.type, account.name, false);
+       /* for (Account account : AccountManager.get(this).getAccounts()) {
+            Identity identity = new IdentityModel(account.name, account.type, null);
+            identities.add(identity);
+        }*/
+/*
+        /*do some more to get the phone number here*/
+        /*String[] projection = new String[] {
+                ContactsContract.Profile._ID,
+                ContactsContract.Profile.IS_USER_PROFILE,
+                ContactsContract.Profile.LOOKUP_KEY
+        };
+        Cursor profileCursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, null,null,null);
+        profileCursor.moveToFirst();
+        while(!(profileCursor.isLast())) {
+            String userDisplayName = profileCursor.getString(profileCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DATA1));
+            String
+        }*/
+        AccountUtils.UserProfile userProfile = AccountUtils.getUserProfile(this);
+        identities.addAll(userProfile.getIdentities());
+        identities.add(IdentityModel.getPseudonymousIdentity());
+
+        for(Identity identity:identities){
+            ChecklistItem checklistItem = new ChecklistItem(this, identity.getType(),identity.getTextValue(),false);
+
+
            checklistItem.setCheckMarkDrawable(R.drawable.ic_menu_send);
            checklistItem.setOnClickListener(new View.OnClickListener() {
                                                 @Override
@@ -71,20 +99,10 @@ public class ConfigureKeyActivity extends BaseActivity {
         }
 
         toolbar.setTitle(R.string.configure_key_title);
-        toolbar.setSubtitle(Kidney.toString(fingerprint.getKeyID()));
+        toolbar.setSubtitle(getResources().getString(R.string.configure_key_subtitle_prefix)+Kidney.toString(fingerprint.getKeyID()));
 
-/*do some more to get the phone number here
-        String[] projection = new String[] {
-            ContactsContract.Profile._ID,
-            ContactsContract.Profile.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.StructuredName.DATA1,
-                ContactsContract.Profile.LOOKUP_KEY
-        };
-        Cursor profileCursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, null,null,null);
-        profileCursor.moveToFirst();
-        String userDisplayName = profileCursor.getString(profileCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DATA1));
-        identitiesView.setText(userDisplayName);
-    }*/
+
+
     }
     private void loadKeyLock(Intent intent) {
         switch (intent.getAction()) {

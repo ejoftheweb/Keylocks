@@ -16,6 +16,8 @@ public class ChecklistItem extends AppCompatCheckedTextView {
         setText(text);
         setChecked(checked);
         setColours();
+        setTextSize(16);
+        setPadding(2,2,2,2);
     }
     public String getName(){
         return name;

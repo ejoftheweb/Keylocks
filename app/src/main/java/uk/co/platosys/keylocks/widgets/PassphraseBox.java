@@ -1,6 +1,7 @@
 package uk.co.platosys.keylocks.widgets;
 
 import android.content.Context;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ public class PassphraseBox extends AppCompatMultiAutoCompleteTextView {
     public PassphraseBox(Context context, AttributeSet attributeSet){
         super(context,attributeSet);
         setTokenizer(new SpaceTokenizer());
+        setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         setAdapter(new ArrayAdapter<String>(context,
                 R.layout.support_simple_spinner_dropdown_item, EffwordLists.getLongWordList()
         ));
