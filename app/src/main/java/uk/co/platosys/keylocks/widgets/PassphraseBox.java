@@ -2,99 +2,142 @@ package uk.co.platosys.keylocks.widgets;
 
 import android.content.Context;
 import android.text.InputType;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 
-import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.platosys.effwords.EffwordLists;
 import uk.co.platosys.keylocks.R;
 
-public class PassphraseBox extends AppCompatMultiAutoCompleteTextView {
+/** Widget displaying a passphrase box for entering random-word passphrases. Implement and attach an OnPassphraseEnteredListener
+ *  to collect the  entered passphrase and move to the next stage.
+ *
+ */
+public class PassphraseBox extends ConstraintLayout {
     private char[] passphrase;
     private CharSequence blank = new String("");
     boolean set = false;
     private String TAG = "PPBox";
-    public PassphraseBox(Context context, AttributeSet attributeSet){
-        super(context,attributeSet);
-        setTokenizer(new SpaceTokenizer());
-        setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        setAdapter(new ArrayAdapter<String>(context,
+    private TextView wordCounterView;
+    private TextView rubricView;
+    private AppCompatAutoCompleteTextView entryView;
+    private KLButton okButton;
+    private KLButton clearButton;
+    private List<CharSequence> wordlist = new ArrayList<>();
+    private static final CharSequence COUNTER_CHARS = " *";
+    private static final String SPACE=" ";
+    private OnPassphraseEnteredListener onPassphraseEnteredListener;
+    private OnPassphraseClearedListener onPassphraseClearedListener;
+
+    public PassphraseBox(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.passphrase_box, this);
+        initialiseViews();
+
+        //Log.e(TAG, "creating passphrease-box");
+
+        // entryView.setTokenizer(new SpaceTokenizer());
+
+        entryView.setAdapter(new ArrayAdapter<String>(context,
                 R.layout.support_simple_spinner_dropdown_item, EffwordLists.getLongWordList()
         ));
-    }
-    public char[] getPassphrase(){
-        if(set) {
-            return passphrase;
 
-        }else{
-            set();
-            return passphrase;
-        }
+        entryView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Log.e(TAG, "item-click-listener-triggered");
+                TextView textView = (TextView) view;
+                wordlist.add(textView.getText());
+                wordCounterView.append(COUNTER_CHARS);//replace
+                entryView.setText("");
+
+            }
+       });
+
+        clearButton.setOnClickListener(new OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               //Log.e(TAG,"clear button clicked");
+                                               PassphraseBox.this.onPassphraseCleared();
+                                              clear();
+                                           }
+                                       }
+        );
+        okButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringBuffer buffer = new StringBuffer();
+                for(CharSequence word:wordlist){
+                    buffer.append(word);
+                    buffer.append(SPACE);
+                }
+                PassphraseBox.this.passphrase=new String(buffer).trim().toCharArray();
+                PassphraseBox.this.onPassphraseEntered();
+                clear();
+            }
+        });
+
     }
 
-    /** Clears the display but sets the passphrase variable which can
-     * still be reached using the getPassphrase() method.
-     *
-     */
-    public void set(){
-        String text = getText().toString().trim();
-        this.passphrase= text.toCharArray();
-        setText(blank);
-        set=true;
+    public char[] getPassphrase() {
+         return passphrase;
     }
+
     public void clear(){
-        setText(blank);
-        this.passphrase=getText().toString().toCharArray();
-        set=false;
+        wordlist.clear();
+        wordCounterView.setText("");
+        entryView.setText("");
     }
-    public void setExpectsInput(boolean expectsInput){
-
+    /**Listener called when the "ok" button is pressed*/
+    public interface OnPassphraseEnteredListener {
+        public void onPassphraseEntered(PassphraseBox passphraseBox);
     }
-    /**
-     *  inner class to define the SpaceTokeniser to use for the multi-complete text box.
-     */
-    private class SpaceTokenizer implements MultiAutoCompleteTextView.Tokenizer {
-        public int findTokenStart(CharSequence text, int cursor) {
-            int i = cursor;
-            while (i > 0 && text.charAt(i - 1) != ' ') {i--;}
-            while (i < cursor && text.charAt(i) == ' ') {i++;}
-            return i;
+    /**Listener called when the "clear" button is pressed*/
+    public interface OnPassphraseClearedListener {
+        public void onPassphraseCleared(PassphraseBox passphraseBox);
+    }
+    public void setOnPassphraseEnteredListener (OnPassphraseEnteredListener onPassphraseEnteredListener){
+        this.onPassphraseEnteredListener=onPassphraseEnteredListener;
+    }
+    public void setOnPassphraseClearedListener (OnPassphraseClearedListener onPassphraseClearedListener){
+        this.onPassphraseClearedListener = onPassphraseClearedListener;
+    }
+    private void onPassphraseEntered(){
+        if(onPassphraseEnteredListener!=null) {
+            onPassphraseEnteredListener.onPassphraseEntered(this);
         }
-
-        public int findTokenEnd(CharSequence text, int cursor) {
-            int i = cursor;
-            int len = text.length();
-            while (i < len) {
-                if (text.charAt(i) == ' ') {
-                    return i;
-                } else {
-                    i++;
-                }
-            }
-            return len;
+    }
+    private void onPassphraseCleared(){
+        clear();
+        if(onPassphraseClearedListener!=null) {
+            onPassphraseClearedListener.onPassphraseCleared(this);
         }
-
-        public CharSequence terminateToken(CharSequence text) {
-            int i = text.length();
-            while (i > 0 && text.charAt(i - 1) == ' ') {i--;}
-            if (i > 0 && text.charAt(i - 1) == ' ') {
-                return text;
-            } else {
-                if (text instanceof Spanned) {
-                    SpannableString spannableString = new SpannableString(text + " ");
-                    TextUtils.copySpansFrom((Spanned) text, 0, text.length(),
-                            Object.class, spannableString, 0);
-                    return spannableString;
-                } else {
-                    return text + " ";
-                }
-            }
-        }
+    }
+    public void setClearButtonText(int resourceID){
+        this.clearButton.setText(resourceID);
+    }
+    public void setOkButtonText(int resourceID){
+        this.okButton.setText(resourceID);
+    }
+    public void setRubric(int resourceID){
+        this.rubricView.setText(resourceID);
+    }
+    private void initialiseViews() {
+        this.wordCounterView = (TextView) findViewById(R.id.passphrase_wordcount);
+        this.rubricView = (TextView) findViewById(R.id.passphrase_rubric);
+        this.entryView = (AppCompatAutoCompleteTextView) findViewById(R.id.pbox_entry);
+        this.okButton = (KLButton) findViewById(R.id.pbox_ok_button);
+        this.clearButton = (KLButton) findViewById(R.id.pbox_clear_button);
+        entryView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
     }
 }

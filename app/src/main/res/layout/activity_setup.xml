@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+
     tools:context=".activities.SetupActivity">
 
     <TextView
@@ -15,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:layout_editor_absoluteX="-2dp"
-        android:layout_margin="@dimen/rubric_margin"
+
         style="@style/HeadingTextView"/>
 
     <ImageView
@@ -60,10 +63,19 @@
         android:text="@string/button_next"
         android:textAllCaps="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/centre_button"
+        app:layout_constraintTop_toBottomOf="@id/rubric_caption_view"
+        style="@style/preferred_button"/>
+    <uk.co.platosys.keylocks.widgets.KLButton
+        android:id="@+id/centre_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_next"
+        android:textAllCaps="true"
+        app:layout_constraintRight_toLeftOf="@id/right_button"
         app:layout_constraintLeft_toRightOf="@id/left_button"
         app:layout_constraintTop_toBottomOf="@id/rubric_caption_view"
         style="@style/preferred_button"/>
-
 
         <RadioGroup
             android:id="@+id/create_or_import_radio_group"
@@ -204,8 +216,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passphrase_4"
         android:layout_marginBottom="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+
         android:layout_marginTop="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rubric_caption_view"

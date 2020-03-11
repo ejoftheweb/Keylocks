@@ -1,20 +1,16 @@
 package uk.co.platosys.keylocks.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -27,12 +23,10 @@ import uk.co.platosys.keylocks.services.LocksmithService;
 import uk.co.platosys.keylocks.widgets.KLButton;
 import uk.co.platosys.keylocks.widgets.PassphraseBox;
 import uk.co.platosys.minigma.Fingerprint;
-import uk.co.platosys.minigma.Minigma;
 import uk.co.platosys.minigma.PassPhraser;
 import uk.co.platosys.minigma.utils.MinigmaUtils;
 
 import static uk.co.platosys.keylocks.Constants.ACTION_NEW_KEY;
-import static uk.co.platosys.keylocks.Constants.PASSPHRASE_INTENT_KEY;
 import static uk.co.platosys.keylocks.Constants.TEMP_PASSPHRASE_INTENT_KEY;
 
 public class SetupActivity extends BaseActivity implements LocksmithService.OnKeyCreatedListener {
@@ -54,6 +48,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     TextView flashcards;
     KLButton leftButton;
     KLButton rightButton;
+    KLButton centreButton;
     TextView fullPassphrase;
     PassphraseBox passphraseBox;
     ArrayList<TextView> passphraseList = new ArrayList<>();
@@ -67,6 +62,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     private boolean rotating_rubrices=false;
     private boolean keycreated=false;
     Fingerprint createdKeyFingerprint = null;
+    private static final String BLANK="";
 
     char[] temppassphrase;
     private String TAG="SetupActivity";
@@ -91,6 +87,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         this.flashcards=(TextView) findViewById(R.id.flashchards);
         this.leftButton=(KLButton) findViewById(R.id.left_button);
         this.rightButton=(KLButton) findViewById(R.id.right_button);
+        this.centreButton=(KLButton) findViewById(R.id.centre_button);
         this.passphraseBox=(PassphraseBox) findViewById(R.id.passphrase_box);
         this.fullPassphrase=(TextView) findViewById(R.id.full_passphrase);
     }
@@ -104,9 +101,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         setInitialListeners();
         setOpeningVisibility();
         fillLists();
-
         temppassphrase= MinigmaUtils.encode(new SecureRandom().nextLong()).toCharArray();
-
     }
     @Override
     public void onKeyCreated(Fingerprint fingerprint){
@@ -142,6 +137,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     private void setOpeningVisibility() {
         this.createKeylockButton.setVisibility(View.INVISIBLE);
         this.importKeylockButton.setVisibility(View.INVISIBLE);
+        this.centreButton.setVisibility(View.INVISIBLE);
         lessSecure.setVisibility(View.INVISIBLE);
         moreSecure.setVisibility(View.INVISIBLE);
         seekBar.setVisibility(View.INVISIBLE);
@@ -297,6 +293,9 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         });
     }
     private void learnPassphrase(){
+        passphraseBox.setVisibility(View.INVISIBLE);
+        stopRotatingRubrics();
+        rubricCaptionView.setText(R.string.passphrase_learn0);
         this.rubricTitleView.setText(R.string.rubric_learn_passphrase_title);
         this.lessSecure.setVisibility(View.INVISIBLE);
         this.seekBar.setVisibility(View.INVISIBLE);
@@ -309,30 +308,22 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         this.passphrase5.setVisibility(View.INVISIBLE);
         this.rubricIllustrationView.setVisibility(View.INVISIBLE);
         this.flashcards.setVisibility(View.VISIBLE);
-        this.rightButton.setVisibility(View.VISIBLE);
-        this.leftButton.setVisibility(View.VISIBLE);
+        this.rightButton.setVisibility(View.INVISIBLE);
+        this.leftButton.setVisibility(View.INVISIBLE);
         this.wordList=PassPhraser.toWordList(passphrase);
-        rubrics=new ArrayList<>();
-        rubrics.add(getString(R.string.passphrase_learn0));
-        rubrics.add(getString(R.string.passphrase_learn1));
-        rubrics.add(getString(R.string.passphrase_learn2));
-        rubrics.add(getString(R.string.passphrase_learn3));
-        rightButton.setEnabled(false);
-
-        rightButton.setOnClickListener(nextListener);
-        rightButton.setText(R.string.button_next);
-        leftButton.setOnClickListener(startListener);
-        leftButton.setPreferred(true);
-        leftButton.setText(R.string.button_start);
+        this.centreButton.setVisibility(View.VISIBLE);
+        this.centreButton.setOnClickListener(startListener);
+        this.centreButton.setText(R.string.button_start);
     }
     private  View.OnClickListener startListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
-            Log.i("LPP", "start button pressed");
+            //Log.i("LPP", "start button pressed");
             KLButton button = (KLButton) view;
             button.setText(R.string.button_hide);
             button.setOnClickListener(hideListener);
+            rubricCaptionView.setText("");
             startFlashShow();
         }
     };
@@ -342,6 +333,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
             KLButton button = (KLButton) view;
             button.setText(R.string.button_start);
             button.setOnClickListener(startListener);
+            rubricCaptionView.setText(R.string.passphrase_learn0);
             stopFlashShow();
         }
     };
@@ -353,56 +345,87 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
            testPassphrase();
         }
     };
+    //stage called by the flash show.
+    //but do we need a separate timer? count the flashshow repeats?
+    private void firstLearningDone(){
+        centreButton.setVisibility(View.INVISIBLE);
+
+        leftButton.setVisibility(View.VISIBLE);
+        leftButton.setOnClickListener(hideListener);
+        leftButton.setEnabled(true);
+        leftButton.setText(R.string.button_hide);
+
+        rightButton.setVisibility(View.VISIBLE);
+        rightButton.setEnabled(true);
+        rightButton.setOnClickListener(nextListener);
+        rightButton.setText(R.string.button_got_it);
+    }
     private void startFlashShow(){
         new Thread(new FlashShow()).start();
     }
     private void stopFlashShow(){
         flashing=false;
         flashcards.setText("");
+        fullPassphrase.setText("");
+    }
+    private void flashWord(String word){
+        if(flashing){
+            fullPassphrase.setVisibility(View.INVISIBLE);
+            flashcards.setVisibility(View.VISIBLE);
+            flashcards.setText(word);
+        }else{
+            flashcards.setText(BLANK);
+        }
+    }
+    private void flashPhrase(char [] passphrase){
+        if(flashing){
+            flashcards.setVisibility(View.INVISIBLE);
+            fullPassphrase.setVisibility(View.VISIBLE);
+            fullPassphrase.setText(new String(passphrase));
+        }else{
+            fullPassphrase.setText(BLANK);
+        }
     }
     private class FlashShow implements Runnable {
         public void run(){
             flashing=true;
+            int flashcount = 0;
             try {
                 while (flashing) {
+                    flashcount++;
                     for (final String word : wordList) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                fullPassphrase.setVisibility(View.INVISIBLE);
-                                flashcards.setVisibility(View.VISIBLE);
-                                flashcards.setText(word);
+                                flashWord(word);
                             }
                         });
-
                         Thread.sleep(Constants.FLASHWAIT);
                     }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            flashcards.setVisibility(View.INVISIBLE);
-                            fullPassphrase.setVisibility(View.VISIBLE);
-                            fullPassphrase.setText(new String(passphrase));
-                            rubricCaptionView.setText(nextRubric());
+                            flashPhrase(passphrase);
                         }
                     });
                     Thread.sleep(Constants.FLASHPAUSE);
-                    runOnUiThread(new Runnable(){
-                        @Override
-                        public void run(){
-                            rightButton.setPreferred(true);
-                            leftButton.setPreferred(false);
-                            flashcards.setVisibility(View.VISIBLE);
-                            fullPassphrase.setVisibility(View.INVISIBLE);
-                        }
-                    });
-
+                    if(flashcount>Constants.FLASH_MINIMUM_REPETITIONS){
+                        runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+                               firstLearningDone();
+                            }
+                        });
+                    }
                 }
             }catch(Exception x){
                 Log.e("LPP", "error during flash show", x);
             }
         }
     }
+
+
+
     private void startRotatingRubrics(){new Thread(new RubricRotator()).start();}
     private void stopRotatingRubrics(){
         rotating_rubrices=false;
@@ -440,29 +463,40 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
     }
 
     private void testPassphrase(){
-
+        stopFlashShow();
+        hideButtons();
         this.rubricTitleView.setText(rubricTitles.get(trycounter));
+        stopRotatingRubrics();
+
         this.rubricCaptionView.setVisibility(View.INVISIBLE);
         this.flashcards.setVisibility(View.INVISIBLE);
         this.fullPassphrase.setVisibility(View.INVISIBLE);
+        this.passphraseBox.setRubric(R.string.rubric_try_passphrase);
         this.passphraseBox.setVisibility(View.VISIBLE);
         this.passphraseBox.clear();
-        leftButton.setText(R.string.button_relearn_label);
-        leftButton.setPreferred(true);
-        rightButton.setEnabled(true);
-        rightButton.setText(R.string.OK);
-        rightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                passphraseBox.set();
-                char[] testPassphrase = passphraseBox.getPassphrase();
-                if(Arrays.equals(passphraseBox.getPassphrase(),passphrase)){
-                    passedTest();
-                }else{
-                    failedTest();
-                }
-            }
-        });
+        this.passphraseBox.setClearButtonText(R.string.button_relearn_label);
+        this.passphraseBox.setOnPassphraseEnteredListener(new PassphraseBox.OnPassphraseEnteredListener() {
+                                                              @Override
+                                                              public void onPassphraseEntered(PassphraseBox passphraseBox) {
+                                                                  if(Arrays.equals(passphrase, passphraseBox.getPassphrase())){
+                                                                      passedTest();
+                                                                  }else{
+                                                                      failedTest();
+                                                                  }
+                                                              }
+                                                          }
+
+        );
+        this.passphraseBox.setOnPassphraseClearedListener(new PassphraseBox.OnPassphraseClearedListener() {
+                                                              @Override
+                                                              public void onPassphraseCleared(PassphraseBox passphraseBox) {
+                                                                  //Log.e(TAG, "passphrase cleared");
+                                                                  learnPassphrase();
+                                                              }
+                                                          }
+        );
+
+
 
     }
     public void passedTest(){
@@ -470,19 +504,13 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
             trycounter++;
             testPassphrase();
         }else if (keycreated) {
-            rightButton.setText(R.string.button_next);
-            rightButton.setPreferred(true);
+
             final Intent intent = new Intent(this, ConfigureKeyActivity.class);
             intent.setAction(ACTION_NEW_KEY);
             intent.putExtra(Constants.PASSPHRASE_INTENT_KEY, passphrase);
             intent.putExtra(TEMP_PASSPHRASE_INTENT_KEY, temppassphrase);
             intent.putExtra(Constants.KEYID_INTENT_KEY, createdKeyFingerprint.getFingerprintbytes());
-            rightButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(intent);
-                }
-            });
+           startActivity(intent);
         }else {
             showAlert(R.string.keylock_not_ready_alert_title, R.string.keylock_not_ready_alert_body, new DialogInterface.OnClickListener() {
                 @Override
@@ -493,7 +521,7 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         }
     }
     public void failedTest(){
-        Log.e(TAG, "failed test" + new String(passphraseBox.getPassphrase())+" <> "+ new String(passphrase));
+       // Log.e(TAG, "failed test" + new String(passphraseBox.getPassphrase())+" <> "+ new String(passphrase));
         trycounter=0;
         learnPassphrase();
     }
@@ -509,6 +537,11 @@ public class SetupActivity extends BaseActivity implements LocksmithService.OnKe
         }catch (Exception x){
             Log.e(TAG, "context exception ", x);
         }
+    }
+    private void hideButtons(){
+        rightButton.setVisibility(View.INVISIBLE);
+        leftButton.setVisibility(View.INVISIBLE);
+        centreButton.setVisibility(View.INVISIBLE);
     }
 
 }

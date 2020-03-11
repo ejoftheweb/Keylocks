@@ -10,16 +10,16 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
+import android.util.Log;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.util.DisplayMetrics;
-import android.util.Log;
-
 import uk.co.platosys.keylocks.R;
-import uk.co.platosys.keylocks.services.LockstoreService;
 import uk.co.platosys.keylocks.services.LocksmithService;
+import uk.co.platosys.keylocks.services.LockstoreService;
 
 
 /**
@@ -43,7 +43,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private ServiceConnection lockStoreServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
-            Log.d("BA", className + " is bound");
+            Log.e("BA", className + " is bound to the lockstore service");
             lockstoreBinding = true;
             lockstoreService=((LockstoreService.LockstoreBinder) iBinder).getService();
             onLockStoreBound();
@@ -60,7 +60,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private ServiceConnection lockSmithServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
-            Log.e("BA", className + " is bound");
+            Log.i("BA", className + " is bound to the Locksmith service");
             locksmithBinding = true;
             locksmithService =((LocksmithService.LocksmithBinder) iBinder).getService();
             onLockSmithBound();
@@ -82,7 +82,7 @@ public abstract class BaseActivity extends FragmentActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
-
+        Log.e("BA", "creating base activity ");
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
 
         }
@@ -117,13 +117,14 @@ public abstract class BaseActivity extends FragmentActivity {
     private void bind() {
         Intent lockSmithServiceIntent = new Intent(this, LocksmithService.class);
         lockSmithServiceIntent.putExtra("activity", this.getClass().getName());
-        Log.i("BA", className + " about to bind to service");
+        Log.i("BA", className + " about to bind to locksmith service");
         bindService(lockSmithServiceIntent, lockSmithServiceConnection, Context.BIND_AUTO_CREATE);
         Intent lockStoreServiceIntent = new Intent(this, LockstoreService.class);
         lockStoreServiceIntent.putExtra("activity", this.getClass().getName());
-        Log.i("BA", className + " about to bind to service");
-        bindService(lockStoreServiceIntent, lockStoreServiceConnection, Context.BIND_AUTO_CREATE);
-        bound = true;
+        Log.e("BA", className + " about to bind to lockstore service");
+        if(bindService(lockStoreServiceIntent, lockStoreServiceConnection, Context.BIND_AUTO_CREATE)) {
+            bound = true;
+        }
     }
 
     void showAlert(int title, int message, DialogInterface.OnClickListener onClickListener) {

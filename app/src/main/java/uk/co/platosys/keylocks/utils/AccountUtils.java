@@ -1,26 +1,17 @@
 package uk.co.platosys.keylocks.utils;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
-import android.telephony.TelephonyManager;
-import android.util.Patterns;
-
-import com.google.android.gms.auth.GoogleAuthUtil;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import uk.co.platosys.keylocks.models.Identity;
 import uk.co.platosys.keylocks.models.IdentityModel;
-
-import static android.content.Context.TELEPHONY_SERVICE;
 /**
  * A collection of authentication and account connection utilities. With strong inspiration from the Google IO session
  * app.
@@ -29,7 +20,7 @@ import static android.content.Context.TELEPHONY_SERVICE;
 
 public class AccountUtils {
 
-
+public static final String TAG="AUT";
         /**
          * Interface for interacting with the result of {@link AccountUtils#getUserProfile}.
          */
@@ -262,14 +253,33 @@ public class AccountUtils {
                         //user_profile.addPossiblePhoto(Uri.parse(cursor.getString(ProfileQuery.PHOTO)));
                     default:
                 }
-                user_profile.identities.add(new IdentityModel(identity_text_value, identity_type, identity_type_description));
+                IdentityModel im = new IdentityModel(identity_text_value,identity_type,identity_type_description);
+                Log.d(TAG, identity_text_value+" "+identity_type+" "+identity_type_description);
+                user_profile.identities.add(im);
 
+                Log.d(TAG, user_profile.identities.size()+"identities");
 
             }
             cursor.close();
             return user_profile;
         }
-
+    /* for (Account account : AccountManager.get(this).getAccounts()) {
+            Identity identity = new IdentityModel(account.name, account.type, null);
+            identities.add(identity);
+        }*/
+/*
+        /*do some more to get the phone number here*/
+        /*String[] projection = new String[] {
+                ContactsContract.Profile._ID,
+                ContactsContract.Profile.IS_USER_PROFILE,
+                ContactsContract.Profile.LOOKUP_KEY
+        };
+        Cursor profileCursor = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, null,null,null);
+        profileCursor.moveToFirst();
+        while(!(profileCursor.isLast())) {
+            String userDisplayName = profileCursor.getString(profileCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DATA1));
+            String
+        }*/
         /**
          * Contacts user profile query interface.
          */

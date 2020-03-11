@@ -1,7 +1,5 @@
 package uk.co.platosys.keylocks;
 
-import java.io.File;
-
 /**
  * Created by edward on 13/02/18.
  */
@@ -45,11 +43,12 @@ public class Constants {
     public static final int CONFIG_STATE_NONE=0;
     public static final int CONFIG_STATE_KEYLOCK=1;
     public static final int CONFIG_STATE_CONFIGURED=2;
-    public static final int DEFAULT_CONFIG_STATE=CONFIG_STATE_CONFIGURED;
+    public static final int DEFAULT_CONFIG_STATE=CONFIG_STATE_NONE;
 
     //timings in ms for the LearnPassprhase flashcards.
     public static final long FLASHWAIT = 800;
     public static final long FLASHPAUSE=  1200;
+    public static final int FLASH_MINIMUM_REPETITIONS=3;
     public static final long RUBRICS_PAUSE=1500;
 
 public static final String ASCII_ARMORED_EXTENSION="asc";

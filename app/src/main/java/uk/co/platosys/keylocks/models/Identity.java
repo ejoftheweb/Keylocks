@@ -1,11 +1,13 @@
 package uk.co.platosys.keylocks.models;
 
 
+import uk.co.platosys.keylocks.widgets.Checklist;
+
 /**
  *  An identity is a way of identifying someone, like a name, an email address, a phone number or a
  *  Twitter handle.
  */
-public interface Identity {
+public interface Identity extends Checklist.Checklistable {
     /**
      * this Identity
      */
@@ -18,6 +20,8 @@ public interface Identity {
      * @return
      */
     public String getType(); //eg. com.twitter
+
+    public String getName();
 
     /**
      * A more user-friendly way of determining the type. Eg for a Twitter type, it might be: "Twitter handle".

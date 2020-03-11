@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.IBinder;
 import android.util.Log;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import uk.co.platosys.minigma.exceptions.MinigmaException;
  * helper methods.
  */
 public class LockstoreService extends IntentService {
+    private final IBinder iBinder = new LockstoreBinder();
     private static final String TAG = "LStIS";
     private static final String ACTION_ADD_LOCK = "uk.co.platosys.keylocks.services.action.add_lock";
     private static final String ACTION_GET_LOCK = "uk.co.platosys.keylocks.services.action.get_lock";
@@ -106,5 +108,9 @@ public class LockstoreService extends IntentService {
         }catch (MinigmaException mx){
 
         }
+    }
+    @Override
+    public  IBinder onBind(Intent intent){
+        return iBinder;
     }
 }

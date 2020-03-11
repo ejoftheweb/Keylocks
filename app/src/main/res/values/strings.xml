@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">KeyLocks</string>
+    <string name="app_long_name">Signet-Keys and Proof-Locks</string>
+
     <string name="close_down">Sorry, KeyLocks cannot work without access to your contacts</string>
+
 
     <!--passphrase selection-->
     <string name="less_secure_label">Less secure, easier</string>
@@ -12,14 +15,25 @@
     <string name="passphrase_learn2">Your passphrase is used to activate your private Key, which is kept securely on this
         device</string>
     <string name="rubric_learn_passphrase_title">Learn your passphrase</string>
+    <string name="rubric_enter_passphrase">enter your passphrase</string>
+    <string name="rubric_try_passphrase">try your passphrase now</string>
+    <string name="bad_passphrase_alert_title">Oops! bad passphrase</string>
+    <string name="bad_passphrase_alert_body">Looks like you entered the wrong passphrase. Try again?</string>
 
     <string name="passphrase_learn3">When you are happy that you can remember your passphrase, press "next"</string>
     <string name="passphrase_test">Now see if you can remember your passphrase - enter it below.</string>
     <string name="button_start">start</string>
     <string name="button_hide">hide</string>
     <string name="button_next">next</string>
+    <string name="button_got_it">got it</string>
+    <string name="button_OK">OK</string>
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="go_back">back</string>
+    <string name="clear">clear</string>
+    <string name="pause_alert_title">Please wait</string>
+    <string name="pause_alert_body">KeyLocks needs to catch up with some background processing...</string>
+
     <string name="title_activity_create_key">CreateKey</string>
     <string name="sign_in">Sign in with Google</string>
 
@@ -41,6 +55,8 @@
     <string name="key_import_failure_alert_body">Is the file you chose an Ascii-armored text file containing a supported PGP Private Key?</string>
 
     <string name="confirm_passphrase_alert_title">Choose this passphrase?</string>
+    <string name="identity_added_alert_title"></string>
+    <string name="identity_added_alert_body">added to key: </string>
 
 
     <!--setup rubrices -->
@@ -59,8 +75,9 @@
     <string name="rubric_test_passphrase_title_0">Test your memory!</string>
     <string name="rubric_test_passphrase_title_1">That\'s good. Try again!</string>
     <string name="rubric_test_passphrase_title_2">One more time...</string>
+    <string name="rubric_test_passphrase_title_3">Great! Press "next" to continue</string>
 
-    <string name="button_relearn_label">Try Again</string>
+    <string name="button_relearn_label">Remind me...</string>
 
     <!--Key configuration rubrics-->
     <string name="configure_key_title">Configure KeyLock</string>
@@ -93,4 +110,7 @@
     <!--not implemented alert-->
     <string name="feature_not_implemented_alert_title">Not implemented</string>
     <string name="feature_not_implementedd_alerd_body">Sorry, the feature you are trying to access has not yet been implemented</string>
+    <!--unforseen error alert-->
+    <string name="error_unexpected_alert_title">Unexpected error</string>
+    <string name="error_unexpected_alert_body">An unexpected error occurred: </string>
 </resources>

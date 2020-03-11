@@ -21,7 +21,6 @@ import uk.co.platosys.minigma.Minigma;
 import uk.co.platosys.minigma.MinigmaLockStore;
 import uk.co.platosys.minigma.exceptions.Exceptions;
 
-
 import static uk.co.platosys.keylocks.Constants.LOCKSTORE_FILE_NAME;
 import static uk.co.platosys.keylocks.Constants.PASSPHRASE_INTENT_KEY;
 import static uk.co.platosys.keylocks.Constants.TEMP_PASSPHRASE_INTENT_KEY;
@@ -102,10 +101,11 @@ public class LocksmithService extends IntentService {
                     Log.e(TAG, "now creating the lockset");
 
                     Lock lock = LockSmith.createLockset(keysDirectory, lockstore, passphrase, Algorithms.RSA);
-                    Log.e(TAG, "lockset created with shortID "+lock.getShortID());
+                    Log.e(TAG, "lockset created with fingerprint "+lock.getFingerprint().toBase64String());
 
-                    Log.d(TAG, keysDirectory.getPath());
-                    File keyfile = new File (keysDirectory, lock.getShortID());
+                    //Log.d(TAG, keysDirectory.getPath());
+                    File keyfile = new File (keysDirectory, lock.getFingerprint().toBase64String());
+                    Log.d(TAG, keyfile.getPath());
                     if(keyfile.exists()){
                         Log.e(TAG, "keyfile created with path "+keyfile.getPath());
                     }else{

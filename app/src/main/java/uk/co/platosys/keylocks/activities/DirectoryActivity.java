@@ -1,27 +1,27 @@
 package uk.co.platosys.keylocks.activities;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
+import android.os.IBinder;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
+import com.google.android.material.snackbar.Snackbar;
 
 import uk.co.platosys.keylocks.R;
+import uk.co.platosys.keylocks.services.LockstoreService;
 
 
 /**Directory Activity is the default Activity for the application. It is an address book.
@@ -36,6 +36,24 @@ public class DirectoryActivity extends AppCompatActivity {
      private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private NavController navController;
+    private boolean lockstoreBinding;
+    private LockstoreService lockstoreService;
+    private ServiceConnection lockStoreServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder iBinder) {
+            Log.e("BA", className + " is bound to the lockstore service");
+            lockstoreBinding = true;
+            lockstoreService=((LockstoreService.LockstoreBinder) iBinder).getService();
+            onLockStoreBound();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            //Log.d("BA", className + " is unbound");
+            lockstoreBinding = false;
+            lockstoreService=null;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,5 +100,8 @@ public class DirectoryActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+    }
+    private void onLockStoreBound(){
+
     }
 }

@@ -6,12 +6,16 @@
     <color name="klbutton_preferred">#ffffcc</color>
     <color name="klbutton_enabled">#efefe0</color>
     <color name="klbutton_disabled">#cccccc</color>
+    <color name="passphrase_box_background">#ddffee</color>
     <color name="text_trusted">#000</color>
     <color name="text_more_trusted">#999</color>
     <color name="text_less_trusted">#ccc</color>
     <color name="text_untrusted">#eee</color>
     <color name="checklist_item_unchecked_background">#bbb</color>
-    <color name="checklist_item_checked_background">#dd6</color>
+    <color name="checklist_item_checked_background">#ff0</color>
+    <color name="checklist_item_confirmed_background">#fd0</color>
     <color name="checklist_item_unchecked_text">#333</color>
     <color name="checklist_item_checked_text">#000</color>
+    <color name="checklist_item_confirmed_text">#000</color>
+    c
 </resources>

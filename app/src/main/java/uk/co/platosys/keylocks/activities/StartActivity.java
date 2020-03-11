@@ -1,23 +1,22 @@
 package uk.co.platosys.keylocks.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import uk.co.platosys.keylocks.Constants;
 import uk.co.platosys.keylocks.R;
 
-import static android.content.Context.MODE_PRIVATE;
 import static uk.co.platosys.keylocks.Constants.ACTION_RESUME;
 
 /**
@@ -25,6 +24,9 @@ import static uk.co.platosys.keylocks.Constants.ACTION_RESUME;
  */
 public class StartActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
     private static final String TAG = "StartActivity";
+    private TextView startStatusView;
+    private Button startButton;
+    Intent intent;
     String[] requiredPermissions=new String[]{
             Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.READ_CONTACTS,
@@ -34,14 +36,19 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        for(Account account: AccountManager.get(this).getAccounts()) {
-                Log.e("TATAG",  account.name + " " + account.toString());
-        }
+        this.startStatusView=findViewById(R.id.start_status);
+        this.startButton=findViewById(R.id.start_button);
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS)!=PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, requiredPermissions, Constants.CONTACT_PERMISSIONS_REQUEST);
         }else{
             proceed();
         }
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -69,12 +76,14 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
             sharedPreferences.edit().putInt(Constants.CONFIG_STATE, Constants.CONFIG_STATE_NONE).commit();
         }
 
-            Intent intent;
+            //Intent intent;
             switch (sharedPreferences.getInt(Constants.CONFIG_STATE, Constants.DEFAULT_CONFIG_STATE)){
                 case Constants.CONFIG_STATE_NONE:
+                    startStatusView.setText("Not configured");
                     intent=new Intent(this, SetupActivity.class);
                     break;
                 case Constants.CONFIG_STATE_KEYLOCK:
+                    startStatusView.setText(sharedPreferences.getString(Constants.DEFAULT_KEY_PREFERENCE, null));
                     intent=new Intent(this, ConfigureKeyActivity.class);
                     intent.setAction(ACTION_RESUME);
                     break;
@@ -84,7 +93,7 @@ public class StartActivity extends AppCompatActivity implements ActivityCompat.O
                     break;
             }
         intent.putExtra (sharedPreferences.getString(Constants.DEFAULT_KEY_PREFERENCE, null),"");
-         startActivity(intent);
+         //startActivity(intent);
 
     }
     public void halt(){

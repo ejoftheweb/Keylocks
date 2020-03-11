@@ -6,16 +6,19 @@ public class IdentityModel implements Identity {
     String textValue;
     String type;
     String typeDesciption;
+    boolean checked=false;
 
     public IdentityModel (String textValue, String type, String typeDescription){
-
+        this.textValue=textValue;
+        this.type=type;
+        this.typeDesciption=typeDescription;
     }
     /**
      * this Identity
      */
     @Override
     public String getTextValue() {
-        return null;
+        return textValue;
     }
 
     /**
@@ -26,9 +29,10 @@ public class IdentityModel implements Identity {
      */
     @Override
     public String getType() {
-        return null;
+        return type;
     }
-
+    @Override
+    public String getName() {return type;}
     /**
      * A more user-friendly way of determining the type. Eg for a Twitter type, it might be: "Twitter handle".
      *
@@ -36,10 +40,16 @@ public class IdentityModel implements Identity {
      */
     @Override
     public String getTypeDescription() {
-        return null;
+        return typeDesciption;
     }
     public static Identity getPseudonymousIdentity(){
         return new IdentityModel(new String(PassPhraser.getPassPhrase(2)),Identity.TYPE_PSEUDONYM,Identity.TYPE_DESCRIPTION_PSEUDONYM);
 
+    }
+    public void setChecked(boolean checked){
+        this.checked=checked;
+    }
+    public boolean isChecked(){
+        return checked;
     }
 }
